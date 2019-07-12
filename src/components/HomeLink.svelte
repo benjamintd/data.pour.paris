@@ -11,11 +11,11 @@
 </style>
 
 <div
-  class="ma2 absolute z-999 pointer dib flex flex-row items-center"
+  class="ma3 absolute z-999 pointer dib flex flex-row items-center"
   on:mouseenter={() => (hover = true)}
   on:mouseleave={() => (hover = false)}>
   <a href="/">
-    <Logo size={32} />
+    <Logo size={30} />
   </a>
   {#if hover}
     <div
