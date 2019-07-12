@@ -9,6 +9,19 @@
   .modal {
     background-color: rgba(0, 0, 0, 0.2);
   }
+
+  .button {
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .button:hover {
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .button:active {
+    transform: translateY(1px);
+    box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.2);
+  }
 </style>
 
 {#if open}
@@ -34,8 +47,8 @@
   </div>
 {:else}
   <div
-    class="absolute top-0 right-0 ma3 br-100 bg-white shadow-1 z-999 w2 h2 flex
-    items-center justify-center pointer"
+    class="button absolute top-0 right-0 ma3 br-100 bg-white shadow-1 z-999 w2
+    h2 flex items-center justify-center pointer"
     on:click={() => (open = true)}>
     <strong>i</strong>
   </div>
