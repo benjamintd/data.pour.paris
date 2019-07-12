@@ -4,10 +4,10 @@
   import Spinner from "../../components/Spinner.svelte";
   import HomeLink from "../../components/HomeLink.svelte";
   import Info from "../../components/Info.svelte";
-  import { referentiel } from "./stores.js";
+  import { featureCollection } from "./stores.js";
 </script>
 
-{#if $referentiel.features.length === 0}
+{#if $featureCollection.features.length === 0}
   <Spinner />
 {:else}
   <HomeLink />
@@ -22,9 +22,8 @@
     ou glissez votre souris sur le bandeau temporel.
   </p>
   <p>
-    Certaines heures ne disposent pas de données pour quelques - ou l'ensemble -
-    des routes. Pour cette raison le graphe de densité possède quelques creux
-    dont il ne faut pas tenir compte.
+    Vous pouvez aussi cliquer sur les segments individuels pour voir leur
+    fréquentation et densité durant le mois.
   </p>
   <p>
     L'épaisseur des segments correspond au compte de voitures passées dans
@@ -32,6 +31,11 @@
     de faible épaisseur et complètement bleu foncé représente par exemple un
     bouchon à l'arrêt, tandis qu'un trait épais et jaune pourrait correspondre à
     une situation de périphérique fluide.
+  </p>
+  <p>
+    Certaines heures ne disposent pas de données pour quelques - ou l'ensemble -
+    des routes. Pour cette raison le graphe de densité possède quelques creux
+    dont il ne faut pas tenir compte.
   </p>
   <p>
     Le choix d'une échelle de couleur différente du traditionnel vert - orange -
@@ -61,5 +65,7 @@
   </p>
 </Info>
 
-<Map />
-<Controls />
+<div class="flex flex-column aspect-ratio--object">
+  <Map />
+  <Controls />
+</div>
