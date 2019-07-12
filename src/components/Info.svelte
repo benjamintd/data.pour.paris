@@ -7,7 +7,7 @@
 
 <style>
   .modal {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .button {

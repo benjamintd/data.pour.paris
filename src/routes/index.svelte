@@ -30,6 +30,9 @@
       <li>
         <a href="trafic">trafic mesuré du mois de juin 2019</a>
       </li>
+      <li>
+        <a href="eclairage">éclairage public de la ville</a>
+      </li>
     </ul>
   </div>
 </div>

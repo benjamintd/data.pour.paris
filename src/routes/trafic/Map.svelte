@@ -1,5 +1,5 @@
 <script>
-  import { onMount, setContext } from "svelte";
+  import { onMount } from "svelte";
   import {
     currentTimestamp,
     featureCollection,
