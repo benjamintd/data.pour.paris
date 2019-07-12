@@ -28,7 +28,7 @@
 
     map = new mapboxgl.Map({
       container,
-      style: "mapbox://styles/mapbox/light-v9",
+      style: "mapbox://styles/benjamintd/cjy0ok49i032v1cl0c23uvd5y", // light-v9 with french labels
       center: [2.3387, 48.8597],
       zoom: 11
     });
