@@ -118,7 +118,13 @@
       line = d3
         .line()
         .x((d, i) => x(i))
-        .y(d => y(+d.q))
+        .y((d, i, data) => {
+          if (d.q) {
+            return y(d.q);
+          } else if (data[i - 1] && data[i + 1]) {
+            return y((data[i - 1].q + data[i + 1].q) / 2);
+          } else return 0;
+        }) // if 0, average the neightboring values
         .curve(d3.curveMonotoneX); // apply smoothing to the line
       // define line
       d3.select("#controls-graph")
@@ -171,7 +177,7 @@
               }
             ) : ''}
         <br />
-        {#if selectedVolumes.length}
+        {#if selectedVolumes[$currentTimestamp]}
           <span class="black-50 fw2">
             {selectedVolumes[$currentTimestamp].q} véhicules / h
           </span>

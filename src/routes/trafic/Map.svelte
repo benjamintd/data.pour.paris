@@ -51,6 +51,7 @@
           id: "collection",
           type: "line",
           source: "collection",
+          layout: { "line-join": "round", "line-cap": "round" },
           paint: {
             "line-width": [
               "max",
@@ -82,6 +83,7 @@
           id: "collection-halo",
           type: "line",
           source: "collection",
+          layout: { "line-join": "round", "line-cap": "round" },
           paint: {
             "line-width": [
               "+",
