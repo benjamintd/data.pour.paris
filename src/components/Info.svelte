@@ -40,7 +40,9 @@
         ✕
       </div>
       <slot />
-
+      <p class="f6 black-60">
+        <slot name="license">Données sous license OdbL</slot>
+      </p>
       <Github />
 
     </div>

@@ -46,21 +46,13 @@
     Le mois de juin est intéressant car il comporte un jour férié - le lundi de
     pentecôte le 10 - et la fête de la musique le 21.
   </p>
-  <p>
-    Plus d'informations sur les données utilisées sur le
+  <p slot="license">
     <a
       href="https://opendata.paris.fr/explore/dataset/comptages-routiers-permanents/information/"
       target="_blank"
       noreferrer
       noopener>
-      site opendata.paris
-    </a>
-    ou sur la
-    <a
-      href="https://opendata.paris.fr/api/datasets/1.0/comptages-routiers-permanents/attachments/notice_donnes_trafic_capteurs_permanents_version_20190607_pdf/"
-      noreferrer
-      noopener>
-      documentation PDF.
+      Comptage routier - Mairie de Paris, juin 2019, sous license OdbL
     </a>
   </p>
 </Info>
