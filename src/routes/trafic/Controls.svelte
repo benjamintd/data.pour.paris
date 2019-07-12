@@ -86,7 +86,7 @@
       class="absolute flex flex-column h-100 tc"
       style="left: {x($currentTimestamp)}px;">
       <div class="thinline flex-grow-1" />
-       {$currentTimestamp !== undefined ? new Date(startDate.getTime() + 1000 * 60 * 60 * $currentTimestamp - 30 * 60 * 1000).toLocaleString(
+      {$currentTimestamp !== undefined ? new Date(startDate.getTime() + 1000 * 60 * 60 * $currentTimestamp - 30 * 60 * 1000).toLocaleString(
             'fr-FR',
             {
               timeZone: 'Europe/Paris',

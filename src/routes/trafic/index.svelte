@@ -1,17 +1,20 @@
 <script>
   import Map from "./Map.svelte";
   import Controls from "./Controls.svelte";
-  import Spinner from "./Spinner.svelte";
-  import Info from "./Info.svelte";
+  import Spinner from "../../components/Spinner.svelte";
+  import HomeLink from "../../components/HomeLink.svelte";
+  import Info from "../../components/Info.svelte";
   import { referentiel } from "./stores.js";
 </script>
 
 {#if $referentiel.features.length === 0}
   <Spinner />
+{:else}
+  <HomeLink />
 {/if}
 
 <Info>
-  <h1>trafic - juin 2019</h1>
+  <h1>trafic</h1>
   <p>
     Voici une visualisation du trafic de juin 2019 tel que mesuré par les
     capteurs permanents posés à Paris. Jouez le trafic en appuyant sur

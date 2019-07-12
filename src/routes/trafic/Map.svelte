@@ -7,6 +7,16 @@
   let container;
   let map;
 
+  $: strippedGeoJSON = {
+    type: "FeatureCollection",
+    features: $referentiel.features.map(f => ({
+      id: f.id,
+      type: f.type,
+      geometry: f.geometry,
+      properties: {} // don't include the data in the map features, they will be hydrated with the state
+    }))
+  };
+
   onMount(async () => {
     mapboxgl = (await import("mapbox-gl")).default;
     mapboxgl.accessToken =
@@ -31,7 +41,7 @@
           referentiel.set(fc);
         });
 
-      map.addSource("referentiel", { type: "geojson", data: $referentiel });
+      map.addSource("referentiel", { type: "geojson", data: strippedGeoJSON });
       map.addLayer(
         {
           id: "referentiel",

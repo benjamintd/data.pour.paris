@@ -1,5 +1,6 @@
 <script>
   import Github from "./Github.svelte";
+  import { slide, fade } from "svelte/transition";
 
   let open = false;
 </script>
@@ -12,9 +13,11 @@
 
 {#if open}
   <div
+    transition:fade
     class="modal absolute w-100 h-100 flex items-center justify-center z-999 pa4"
     on:click={() => (open = false)}>
     <div
+      transition:slide
       class="pa4 bg-white br1 shadow-1 relative overflow-x-scroll"
       style="max-height: 80vh;"
       on:click={e => e.stopPropagation()}>
@@ -24,11 +27,9 @@
         ✕
       </div>
       <slot />
-      <a href="https://github.com/benjamintd/open-data-paris">
-        <div class="w1 h1">
-          <Github />
-        </div>
-      </a>
+
+      <Github />
+
     </div>
   </div>
 {:else}
