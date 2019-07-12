@@ -41,7 +41,7 @@
       </div>
       <slot />
       <p class="f6 black-60">
-        <slot name="license">Données sous license OdbL</slot>
+        <slot name="license">Données sous license OdbL.</slot>
       </p>
       <Github />
 
@@ -50,8 +50,8 @@
 {:else}
   <div
     class="button absolute top-0 right-0 ma3 br-100 bg-white shadow-1 z-999 w2
-    h2 flex items-center justify-center pointer"
+    h2 flex items-center justify-center pointer f5 fw6"
     on:click={() => (open = true)}>
-    <strong>i</strong>
+    i
   </div>
 {/if}
