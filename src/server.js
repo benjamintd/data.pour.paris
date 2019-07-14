@@ -1,3 +1,6 @@
+// As we're statically exporting the site, this
+// server is mostly for development purposes.
+
 import sirv from "sirv";
 import polka from "polka";
 import compression from "compression";

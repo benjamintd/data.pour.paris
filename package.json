@@ -11,6 +11,7 @@
     "test": "run-p --race dev cy:run"
   },
   "dependencies": {
+    "cheap-ruler": "^2.5.1",
     "compression": "^1.7.1",
     "d3": "^5.9.7",
     "mapbox-gl": "^1.1.0",

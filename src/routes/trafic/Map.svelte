@@ -58,6 +58,15 @@
               ["/", ["coalesce", ["feature-state", "q"], 1], 500],
               1
             ],
+            "line-offset": [
+              "case",
+              ["coalesce", ["feature-state", "selected"], false],
+              2,
+              0
+            ],
+            "line-offset-transition": {
+              duration: 500
+            },
             "line-color": [
               "interpolate",
               ["linear"],
@@ -93,7 +102,7 @@
             "line-opacity": [
               "case",
               ["coalesce", ["feature-state", "selected"], false],
-              1,
+              0.5,
               0
             ],
             "line-blur": 3,
@@ -104,8 +113,6 @@
       );
     });
 
-    // When a click event occurs on a feature in the states layer, open a popup at the
-    // location of the click, with description HTML from its properties.
     map.on("click", function(e) {
       var bbox = [
         [e.point.x - 2, e.point.y - 2],
