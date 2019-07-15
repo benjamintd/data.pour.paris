@@ -62,9 +62,13 @@ async function fetchStop(stop) {
   }
 }
 
-module.exports = async function fetchAllStops() {
+module.exports = async function fetchAllStops(limit) {
+  let stops = validStops;
+  if (limit) {
+    stops = stops.slice(0, limit);
+  }
   try {
-    const visits = await Promise.all(validStops.map(fetchStop));
+    const visits = await Promise.all(stops.map(fetchStop));
     return _.flatten(visits);
   } catch (e) {
     console.log("error fetching all stops", e);

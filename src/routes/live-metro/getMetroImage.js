@@ -17,7 +17,6 @@ function getImageData(img) {
   canvas.width = img.width;
   canvas.height = img.height;
   context.drawImage(img, 0, 0, img.width, img.height);
-  console.log(context.drawImage(img, 0, 0, img.width, img.height));
   return context.getImageData(0, 0, img.width, img.height);
 }
 
@@ -26,7 +25,6 @@ export default color => {
   return new Promise(resolve => {
     const img = new Image(10, 25);
     img.src = "data:image/svg+xml;base64," + btoa(metroSvg(darker));
-    console.log(img);
     img.onload = () => {
       resolve(getImageData(img));
     };

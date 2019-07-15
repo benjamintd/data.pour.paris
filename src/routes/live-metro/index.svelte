@@ -55,7 +55,10 @@
       map.on("styleimagemissing", async e => {
         // e.id contains the image id which is a color in hex
         const img = await getMetroImage(e.id);
-        map.addImage(e.id, img);
+        if (!map.hasImage(e.id)) {
+          // there can be some race condition that lead to adding it twice
+          map.addImage(e.id, img);
+        }
       });
 
       fetchAndStart();

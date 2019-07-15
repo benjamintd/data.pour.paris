@@ -2,6 +2,7 @@
 // TODO watch log usage and if cached well.
 
 "use strict";
+const AWS = require("aws-sdk");
 const cheapRuler = require("cheap-ruler");
 const _ = require("lodash");
 const graph = require("./graph.json");
@@ -72,22 +73,30 @@ function deduplicateSplitsAndSort(splits) {
 
   let lastValidTime = 0;
   let lastValidLine = "";
+  let lastValidSplit = null;
   let validSplits = [];
   console.log("before filter", splits.length);
   for (let i = 0; i < splits.length; i++) {
     let s = splits[i];
-    if (s[s.length - 2] === lastValidLine) {
-      if (Math.abs(lastValidTime - s[s.length - 1]) < min_difference) continue;
-      else {
-        lastValidTime = s[s.length - 1];
-        validSplits.push(s);
-      }
-    } else {
-      lastValidLine = s[s.length - 2];
-      lastValidTime = s[s.length - 1];
-      validSplits.push(s);
+    // the trains are the same, they need to be deduplicated.
+    // we chose the one with the longest splits (i.e. the further up the path)
+    if (
+      lastValidSplit &&
+      lastValidLine === s[s.length - 2] &&
+      Math.abs(lastValidTime - s[s.length - 1]) < min_difference
+    ) {
+      // we keep the longest one
+      if (s.length <= lastValidSplit.length) continue;
+      // else we'll replace the lastvalidsplit with the longest line
+    } else if (lastValidSplit) {
+      validSplits.push(lastValidSplit);
     }
+    lastValidLine = s[s.length - 2];
+    lastValidTime = s[s.length - 1];
+    lastValidSplit = s;
   }
+  // push last bit
+  validSplits.push(lastValidSplit);
   console.log("after filter", validSplits.length);
 
   return validSplits.sort((a, b) => a[0] - b[0]); // smallest first
@@ -98,11 +107,50 @@ module.exports = async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.setHeader("Access-Control-Allow-Origin", "*");
 
-    var trainTimes = await fetchAllStops(req);
-    var splits = deduplicateSplitsAndSort(trainTimesToSplits(trainTimes));
-    res.end(JSON.stringify(splits));
+    const dynamo = new AWS.DynamoDB({
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      region: "eu-west-3"
+    });
+
+    // get latest item
+    dynamo.getItem(
+      {
+        Key: { Pk: { S: "latest" } },
+        TableName: "metro"
+      },
+      async (err, data) => {
+        if (err) throw err;
+        // return that
+        console.log(data);
+        if (data.Item && data.Item.Splits) {
+          res.json(JSON.parse(data.Item.Splits.S));
+        }
+
+        // if we have a rather old record, make a new one
+        if (
+          !data.Item ||
+          Date.now() - new Date(+data.Item.Timestamp.S).getTime() > 120000
+        ) {
+          var trainTimes = await fetchAllStops();
+          var splits = deduplicateSplitsAndSort(trainTimesToSplits(trainTimes));
+          dynamo.putItem(
+            {
+              Item: {
+                Pk: { S: "latest" },
+                Timestamp: { S: Date.now().toString() },
+                Splits: { S: JSON.stringify(splits) }
+              },
+              TableName: "metro"
+            },
+            err => (err ? console.log(err) : null)
+          );
+        }
+      }
+    );
   } catch (e) {
     console.log("error getting splits", e);
+    res.end([]);
     throw e;
   }
 };
