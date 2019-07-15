@@ -7,7 +7,7 @@
 
 <style>
   .modal {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .button {
@@ -27,7 +27,8 @@
 {#if open}
   <div
     transition:fade
-    class="modal absolute w-100 h-100 flex items-center justify-center z-999 pa4"
+    class="modal absolute w-100 h-100 flex items-center justify-center z-9999
+    pa4"
     on:click={() => (open = false)}>
     <div
       transition:slide

@@ -1,11 +1,27 @@
 {
   "version": 2,
   "alias": "open-data-paris.now.sh",
+  "env": {
+    "STIF_API_KEY": "@stif_api_key",
+    "ACCESS_KEY_ID": "@access_key_id",
+    "SECRET_ACCESS_KEY": "@secret_access_key"
+  },
   "builds": [
     {
       "src": "package.json",
       "use": "@now/static-build",
       "config": { "distDir": "__sapper__/export" }
-    }
-  ]
+    },
+    { "src": "src/api/**/*.json", "use": "@now/static" },
+    { "src": "src/api/live-metro/get-train-splits.js", "use": "@now/node" }
+  ],
+  "routes": [
+    {
+      "src": "/api/live-metro/get-train-splits",
+      "dest": "src/api/live-metro/get-train-splits.js",
+      "headers": { "cache-control": "s-maxage=300" }
+    },
+    { "src": "/api/(.*)", "dest": "src/api/$1" }
+  ],
+  "regions": ["bru"]
 }

@@ -1,5 +1,5 @@
 <script>
-  export let size;
+  export let size = 30;
 </script>
 
 <svg width="{size}px" height="{size}px" viewBox="0 0 30 30">

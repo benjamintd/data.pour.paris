@@ -1,0 +1,15 @@
+{
+  "name": "live-metro-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheap-ruler": "^2.5.1",
+    "lodash": "^4.17.11",
+    "node-fetch": "^2.3.0"
+  }
+}
