@@ -2,6 +2,7 @@
   import cheapRuler from "cheap-ruler";
   import { onMount } from "svelte";
   import { quadInOut } from "svelte/easing";
+  import getMetroImage from "./getMetroImage";
   import Info from "../../components/Info.svelte";
   import HomeLink from "../../components/HomeLink.svelte";
   import Spinner from "../../components/Spinner.svelte";
@@ -41,7 +42,7 @@
         source: "trains",
         layout: {
           "icon-rotate": ["get", "b"],
-          "icon-image": "trolley",
+          "icon-image": ["coalesce", ["get", "c"], "#aaa"], // the image is just noted by the (hex) color
           "icon-anchor": "center",
           "icon-allow-overlap": true,
           "icon-size": {
@@ -51,18 +52,10 @@
         }
       });
 
-      map.addLayer({
-        id: "trains",
-        type: "circle",
-        source: "trains",
-        layout: {},
-        paint: {
-          "circle-color": ["coalesce", ["get", "c"], "#fff"],
-          "circle-radius": {
-            base: 3,
-            stops: [[10, 2], [13, 3]]
-          }
-        }
+      map.on("styleimagemissing", async e => {
+        // e.id contains the image id which is a color in hex
+        const img = await getMetroImage(e.id);
+        map.addImage(e.id, img);
       });
 
       fetchAndStart();
@@ -71,6 +64,7 @@
 
   async function fetchAndStart() {
     const easing = quadInOut;
+    // /api/live-metro/get-train-splits
     const splitsProm = fetch("/api/live-metro/get-train-splits").then(res =>
       res.json()
     );
