@@ -122,18 +122,16 @@ module.exports = async (req, res) => {
       async (err, data) => {
         if (err) throw err;
         // return that
-        console.log(data);
-        if (data.Item && data.Item.Splits) {
-          res.json(JSON.parse(data.Item.Splits.S));
-        }
 
         // if we have a rather old record, make a new one
         if (
           !data.Item ||
-          Date.now() - new Date(+data.Item.Timestamp.S).getTime() > 120000
+          Date.now() - new Date(+data.Item.Timestamp.S).getTime() > 300000
         ) {
+          console.log("fetching new cache");
           var trainTimes = await fetchAllStops();
           var splits = deduplicateSplitsAndSort(trainTimesToSplits(trainTimes));
+          res.json(splits);
           dynamo.putItem(
             {
               Item: {
@@ -145,6 +143,12 @@ module.exports = async (req, res) => {
             },
             err => (err ? console.log(err) : null)
           );
+        } else if (data.Item && data.Item.Splits) {
+          console.log("using cached data");
+          res.json(JSON.parse(data.Item.Splits.S));
+        } else {
+          res.status(500);
+          res.json([]);
         }
       }
     );
