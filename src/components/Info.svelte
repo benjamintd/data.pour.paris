@@ -40,6 +40,7 @@
         on:click={() => (open = false)}>
         ✕
       </div>
+      <!-- the content goes here in the slot -->
       <slot />
       <p class="f6 black-60">
         <slot name="license">Données sous license OdbL.</slot>
