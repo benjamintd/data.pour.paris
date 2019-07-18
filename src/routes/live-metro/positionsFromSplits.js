@@ -1,4 +1,10 @@
+import cheapRuler from "cheap-ruler";
+import { quadInOut } from "svelte/easing";
+const ruler = cheapRuler(48.86727, "meters");
+
 function positionsFromSplits(linesHash, splits, now) {
+  const currentLines = [];
+
   for (var j = 0; j < splits.length; j++) {
     let split = splits[j];
     if (split[0] > now) break;
@@ -19,7 +25,7 @@ function positionsFromSplits(linesHash, splits, now) {
     const distance = line.properties.distance;
     const coord = ruler.along(
       line.geometry.coordinates,
-      easing(progress) * distance
+      quadInOut(progress) * distance
     );
     const pol = ruler.pointOnLine(line.geometry.coordinates, coord);
     const bearing = ruler.bearing(

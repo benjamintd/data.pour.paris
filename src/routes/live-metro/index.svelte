@@ -1,5 +1,4 @@
 <script>
-  import cheapRuler from "cheap-ruler";
   import { onMount } from "svelte";
   import { quadInOut } from "svelte/easing";
   import getMetroImage from "./getMetroImage.js";
@@ -13,8 +12,6 @@
   let map;
 
   let loading = true;
-
-  const ruler = cheapRuler(48.86727, "meters");
 
   onMount(async () => {
     mapboxgl = (await import("mapbox-gl")).default;
@@ -84,7 +81,6 @@
     let now;
 
     function animate() {
-      const currentLines = [];
       now = Date.now() / 1000; // in seconds
       const elapsed = now - then;
 
