@@ -7,7 +7,6 @@
   } from "./stores.js";
 
   let mapboxgl;
-
   let container;
   let map;
 
@@ -17,11 +16,12 @@
       id: f.id,
       type: f.type,
       geometry: f.geometry,
-      properties: {} // don't include the data in the map features, they will be hydrated with the state
+      properties: {} // don't include the data in the map features as a performance improvement
     }))
   };
 
   onMount(async () => {
+    // We load it client-side to avoid server-side-rendering issues with Mapbox that needs a browser context
     mapboxgl = (await import("mapbox-gl")).default;
     mapboxgl.accessToken =
       "pk.eyJ1IjoiYmVuamFtaW50ZCIsImEiOiJjaW83enIwNjYwMnB1dmlsejN6cDBzbm93In0.0ZOGwSLp8OjW6vCaEKYFng";

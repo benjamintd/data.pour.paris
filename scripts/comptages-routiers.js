@@ -20,7 +20,7 @@ const records = parse(file, {
 });
 
 const refMap = new Map();
-console.log(referentiel.features[0]);
+
 referentiel.features.forEach(f => {
   refMap.set(f.properties["iu_ac"], f);
 });

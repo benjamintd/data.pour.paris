@@ -20,7 +20,7 @@
   let endTimestamp = 720; // todo we hardcode it but could derive from the data
 
   const reducer = (a, b) => {
-    // we end up with an array of {q, k, n}
+    // we end up with an array of {q, k, n}, one per timestamp aggregated for all features.
     if (b.properties.q && b.properties.q.length === endTimestamp) {
       b.properties.q.forEach((e, i) => {
         if (a[i] && a[i].q) a[i].q += e;
@@ -64,9 +64,33 @@
     if (d3) {
       let margin = 3;
 
+      // remove existing gradients and lines
+      d3.select("#controls-graph")
+        .selectAll("svg")
+        .remove();
+
+      // chose whether we display the selected graph or the overall one.
+      let volumes;
+      if (selectedVolumes.length) {
+        volumes = selectedVolumes;
+      } else {
+        volumes = collectionVolumes;
+      }
+
+      // define the scales
+      x = d3
+        .scaleLinear()
+        .domain([0, collectionVolumes.length - 1])
+        .range([margin, graphWidth - margin]);
+
+      y = d3
+        .scaleLinear()
+        .domain([0, d3.max(volumes.map(d => d.q))])
+        .range([graphHeight - margin, margin]);
+
       let colorScale = d3
         .scaleLinear()
-        .domain([0, 5, 15, 35, 60])
+        .domain([0, 5, 15, 35, 60]) // the same scale as the one used in the mapbox style
         .range([
           "hsl(60, 89%, 55%)",
           "#fa9b3b",
@@ -74,30 +98,6 @@
           "#9410a0",
           "#110787"
         ]);
-
-      x = d3
-        .scaleLinear()
-        .domain([0, collectionVolumes.length - 1])
-        .range([margin, graphWidth - margin]);
-
-      // remove existing gradients and lines
-      d3.select("#controls-graph")
-        .selectAll("svg")
-        .remove();
-
-      let volumes;
-      // chose whether we display the selected graph or the overall one.
-      if (selectedVolumes.length) {
-        volumes = selectedVolumes;
-      } else {
-        volumes = collectionVolumes;
-      }
-
-      // define y scale
-      y = d3
-        .scaleLinear()
-        .domain([0, d3.max(volumes.map(d => d.q))])
-        .range([graphHeight - margin, margin]);
 
       // define gradient
       d3.select("#controls-graph")
@@ -124,9 +124,10 @@
           } else if (data[i - 1] && data[i + 1]) {
             return y((data[i - 1].q + data[i + 1].q) / 2);
           } else return 0;
-        }) // if 0, average the neightboring values
+        }) // if 0, average the neighboring values
         .curve(d3.curveMonotoneX); // apply smoothing to the line
-      // define line
+
+      // draw line
       d3.select("#controls-graph")
         .select("svg")
         .append("path")

@@ -26,7 +26,7 @@
 
   <div class="ph4">
     <p class="f3 fw2 black-60">visualisations de l'open data parisienne</p>
-    <ul>
+    <ul class="lh-copy">
       <li>
         <a href="trafic">trafic mesuré du mois de juin 2019</a>
       </li>
