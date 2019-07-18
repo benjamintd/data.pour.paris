@@ -4,7 +4,7 @@ const ruler = cheapRuler(48.86727, "meters");
 
 function positionsFromSplits(linesHash, splits, now) {
   const currentLines = [];
-
+  console.log(splits);
   for (var j = 0; j < splits.length; j++) {
     let split = splits[j];
     if (split[0] > now) break;
