@@ -1,15 +1,16 @@
-// TODO rewrite in Typescript, now natively supported by @now/node I think
-// TODO watch log usage and if cached well.
-
 "use strict";
+
 const AWS = require("aws-sdk");
 const cheapRuler = require("cheap-ruler");
 const _ = require("lodash");
-const graph = require("./graph.json");
-const linesHash = require("./linesHash.json");
 const shortestPath = require("./shortest-path.js");
 const fetchAllStops = require("./get-train-times");
 
+const graph = require("./graph.json");
+const linesHash = require("./linesHash.json");
+
+// @todo write a better estimate of the speed
+// it may depend on the line's geometry, length, and reseau (RER or metro or tram)
 const DEFAULT_SPEED = 6.5; // m.s-1
 const RER_SPEED = 10; // m.s-1
 
@@ -102,7 +103,7 @@ function deduplicateSplitsAndSort(splits) {
   return validSplits.sort((a, b) => a[0] - b[0]); // smallest first
 }
 
-module.exports = async (req, res) => {
+function handler(req, res) {
   try {
     res.setHeader("Content-Type", "application/json");
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -157,4 +158,6 @@ module.exports = async (req, res) => {
     res.end([]);
     throw e;
   }
-};
+}
+
+module.exports = handler;
