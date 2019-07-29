@@ -11,5 +11,7 @@ export const categories = {
   "Objets abandonnés": "#7e8773"
 };
 
+export const categoriesList = Object.keys(categories).reverse();
+
 export const filters = writable([]);
 export const renderedFeatures = writable([]);

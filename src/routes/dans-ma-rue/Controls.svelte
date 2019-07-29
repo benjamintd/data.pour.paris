@@ -1,6 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import { renderedFeatures, filters, categories } from "./stores.js";
+  import {
+    renderedFeatures,
+    filters,
+    categories,
+    categoriesList
+  } from "./stores.js";
 
   let d3;
   let graphWidth;
@@ -8,10 +13,32 @@
   let proportionsSize;
   let margin = 30;
   // the d3 objects that we'll reuse (generators and scales)
-  let histogram;
-  let line;
+  let stack;
+  let area;
   let x, y;
   let svg;
+  let path;
+
+  $: counts = $renderedFeatures.reduce(
+    (o, f) => {
+      const date = new Date(f.properties.datedecl);
+      const roundedDate =
+        12 * (date.getFullYear() - 2012) + (date.getMonth() - 6);
+      if (o[roundedDate][f.properties.type] !== undefined) {
+        o[roundedDate][f.properties.type] += 1;
+      } else {
+        o[roundedDate]["Autres"] += 1;
+      }
+      return o;
+    },
+    // 79 months between 2012/07 and 2018/12
+    new Array(79).fill(0).map(() =>
+      categoriesList.reduce((a, l) => {
+        a[l] = 0;
+        return a;
+      }, {})
+    )
+  );
 
   onMount(async () => {
     d3 = await import("d3");
@@ -52,81 +79,64 @@
 
     y = d3.scaleLinear().range([height, 0]);
 
-    // histogram generator that takes an array of features in input
-    histogram = d3
-      .histogram()
-      .value(f => new Date(f.properties.datedecl))
-      .domain(x.domain())
-      .thresholds(x.ticks(d3.timeMonth));
+    // stack generator that takes counts in input
+    stack = d3.stack().keys(categoriesList);
 
-    const bins = histogram($renderedFeatures);
-
-    y.domain([0, d3.max(bins, d => d.length)]);
-
-    // line generator that takes a d3 histogram in input
-    line = d3
-      .line()
-      .x(d => x(d.x0))
-      .y(d => y(d.length))
+    // area generator that takes a d3 stack in input
+    area = d3
+      .area()
+      .x((d, i) => x(new Date(2012, 6 + i, 1)))
+      .y0(d => y(d[0]))
+      .y1(d => y(d[1]))
       .curve(d3.curveMonotoneX);
 
-    const path = svg.append("path");
+    const series = stack(counts);
+    y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
 
-    path
-      .datum(bins)
-      .attr("d", line)
-      .transition()
-      .ease(d3.easeLinear)
-      .attr("stroke", "#444")
-      .attr("stroke-width", 1)
-      .attr("fill", "none");
+    path = svg
+      .select("g")
+      .selectAll("path")
+      .data(series)
+      .enter()
+      .append("path")
+      .attr("d", area)
+      .attr("fill", d => categories[d.key]);
 
     svg
+      .select("g")
       .append("g")
       .attr("class", "xaxis")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x))
-      .transition();
-
-    // svg
-    //   .append("g")
-    //   .attr("class", "yaxis")
-    //   .call(d3.axisLeft(y));
+      .call(d3.axisBottom(x));
   }
 
   $: {
-    $renderedFeatures;
+    counts;
     graphWidth;
     if (d3) {
+      console.log("here");
       // why doesn't resize work?
-      svg.attr("width", graphWidth);
-      x.range([0, graphWidth - 2 * margin]);
+      // svg.attr("width", graphWidth);
+      // x.range([0, graphWidth - 2 * margin]);
 
-      const bins = histogram($renderedFeatures);
-      y.domain([0, d3.max(bins, d => d.length)]);
+      const series = stack(counts);
+      y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
 
-      svg
-        .select("path")
-        .datum(bins)
+      console.log(x.domain(), y.domain(), series);
+
+      path
+        .data(series)
         .transition()
-        .ease(d3.easeLinear)
-        .attr("d", line)
-        .attr("stroke", "#444")
-        .attr("stroke-width", 1)
-        .attr("fill", "none");
+        .attr("d", area);
 
-      svg
-        .select(".xaxis")
-        .transition()
-        .attr("transform", `translate(0, ${graphHeight - 2 * margin})`)
-        .call(d3.axisBottom(x));
+      // initializeGraph();
     }
   }
 </script>
 
 <div class="h5 w-100 pa1 flex items-center">
   <div class="pl3">
-    {#each Object.keys(categories) as c}
+    {#each categoriesList as c}
       <div class="pt2 pointer" on:click={() => onCategoryClick(c)}>
         <div class="w1 h1 relative dib">
           <div
@@ -145,7 +155,6 @@
       </div>
     {/each}
   </div>
-  <div id="proportions" class="w4 h4" bind:offsetWidth={proportionsSize} />
 
   <div
     id="graph"
