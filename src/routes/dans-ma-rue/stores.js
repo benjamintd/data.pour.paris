@@ -15,7 +15,4 @@ export const categoriesList = Object.keys(categories).reverse();
 
 export const filters = writable([]);
 export const renderedFeatures = writable([]);
-export const hoveredMonthAndYear = writable({
-  month: 0,
-  year: 0
-});
+export const dateSelection = writable([]);

@@ -8,7 +8,7 @@
     filters,
     categories,
     categoriesList,
-    hoveredMonthAndYear
+    dateSelection
   } from "./stores.js";
 
   let d3;
@@ -22,12 +22,38 @@
   let x, y;
   let svg;
   let path;
+  let xAxis;
 
-  let graphX = 0;
-  let tweenedX = tweened(0, { duration: 300, easing: cubicOut });
-  $: tweenedX.set(graphX);
-  let graphTimer = 0;
+  let graphHovered = false;
+  let dateOffset = 0;
+  let selectionDown = 0;
+  let selectionUp = 0;
+  let selectionHover = 0;
 
+  $: selection =
+    selectionDown && selectionUp
+      ? [
+          Math.min(selectionDown, selectionUp),
+          Math.max(selectionDown, selectionUp)
+        ]
+      : [];
+
+  $: tempSelection =
+    selectionDown && selectionHover
+      ? [
+          Math.min(selectionDown, selectionHover),
+          Math.max(selectionDown, selectionHover)
+        ]
+      : [];
+
+  $: dateSelection.set(selection);
+
+  function resetGraphSelection() {
+    selectionDown = 0;
+    selectionUp = 0;
+  }
+
+  // get an array of {type: count}[] for each month between 2012/07 and 2018/12
   $: counts = $renderedFeatures.reduce(
     (o, f) => {
       const date = new Date(f.properties.datedecl);
@@ -71,9 +97,6 @@
   }
 
   function initializeGraph() {
-    const width = graphWidth;
-    const height = graphHeight;
-
     d3.select("#graph")
       .selectAll("svg")
       .remove();
@@ -82,7 +105,8 @@
       .select("#graph")
       .append("svg")
       .attr("width", graphWidth)
-      .attr("height", graphHeight);
+      .attr("height", graphHeight)
+      .attr("class", "absolute z-1");
 
     x = d3
       .scaleTime()
@@ -113,7 +137,7 @@
       .attr("d", area)
       .attr("fill", d => categories[d.key]);
 
-    svg
+    xAxis = svg
       .append("g")
       .attr("class", "xaxis")
       .attr(
@@ -131,6 +155,7 @@
       // why doesn't resize work?
       svg.attr("width", graphWidth);
       x.range([0, graphWidth]);
+      xAxis.transition();
 
       const series = stack(counts);
       y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
@@ -152,18 +177,19 @@
     }, 1500);
   }
 
-  $: {
-    if (x && graphX) {
-      let date = x.invert(graphX);
-      let month = date.getMonth() + 1; // js months start at 0
-      let year = date.getFullYear();
-      if (
-        month !== $hoveredMonthAndYear.month ||
-        year !== $hoveredMonthAndYear.year
-      ) {
-        hoveredMonthAndYear.set({ month, year });
-      }
-    }
+  function onGraphMouseMove(e) {
+    graphHovered = true;
+    dateOffset = e.offsetX;
+    selectionHover = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseDown(e) {
+    selectionUp = 0;
+    selectionDown = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseUp(e) {
+    selectionUp = x.invert(e.offsetX);
   }
 </script>
 
@@ -199,27 +225,38 @@
       class="absolute w-100 h-100"
       bind:offsetWidth={graphWidth}
       bind:offsetHeight={graphHeight} />
-    {#if graphTimer && x}
+    {#if graphHovered}
       <div
-        class="absolute bg-black"
-        transition:scale
-        style="width: 1px; left: {$tweenedX}px; bottom: {bottomMargin}px; top:
-        0;">
-        <div
-          class="top-0 bg-white br2 tc f6 pv1 shadow-2"
-          style="min-width: 100px; margin-left: -50px;">
-          {x
-            .invert(graphX)
-            .toLocaleString('fr-FR', {
-              month: 'short',
-              year: 'numeric'
-            })}
-        </div>
-      </div>
+        class="bg-black absolute z-2"
+        style="width: 1px; left: {dateOffset}px; top: 0; bottom: {bottomMargin}px;" />
+    {/if}
+
+    {#if selection.length}
+      <div
+        class="bg-black-30 absolute z-2"
+        style="width: {x(selection[1]) - x(selection[0])}px; left: {x(selection[0])}px;
+        top: 0; bottom: {bottomMargin}px;" />
+    {:else if tempSelection.length}
+      <div
+        class="bg-black-20 absolute z-2"
+        style="width: {x(tempSelection[1]) - x(tempSelection[0])}px; left: {x(tempSelection[0])}px;
+        top: 0; bottom: {bottomMargin}px;" />
     {/if}
     <div
-      class="absolute w-100 h-25 bottom-0"
-      style="pointer-events: auto;"
-      on:mousemove={graphMouseMove} />
+      class="absolute w-100 h-50 z-3 bottom-0"
+      style="pointer-events: auto; cursor: col-resize;"
+      on:mousemove={onGraphMouseMove}
+      on:mouseenter={() => (graphHovered = true)}
+      on:mouseleave={() => (graphHovered = false)}
+      on:mousedown={onGraphMouseDown}
+      on:mouseup={onGraphMouseUp} />
+    {#if selection.length}
+      <button
+        class="absolute white button bg-blue br2 top left z-5 pointer"
+        style="pointer-events: auto;"
+        on:click={resetGraphSelection}>
+        reset
+      </button>
+    {/if}
   </div>
 </div>
