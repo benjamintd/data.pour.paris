@@ -1,6 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import { renderedFeatures, filters, categories } from "./stores.js";
+  import {
+    renderedFeatures,
+    filters,
+    categories,
+    dateSelection
+  } from "./stores.js";
   import Popup from "./Popup.svelte";
 
   let mapboxgl;
@@ -88,6 +93,27 @@
         mapFilter = null;
       }
       setTimeout(() => setRenderedFeatures(), 300);
+    }
+  }
+
+  $: {
+    if (map && map.isStyleLoaded()) {
+      // todo how do we do to keep the graph full with all the features but hide some still?
+      if ($dateSelection.length) {
+        const f = [
+          "all",
+          [
+            ">=",
+            ["get", "datedecl"],
+            new Date($dateSelection[0]).toISOString().split("T")[0]
+          ],
+          [
+            "<=",
+            ["get", "datedecl"],
+            new Date($dateSelection[1]).toISOString().split("T")[0]
+          ]
+        ];
+      }
     }
   }
 

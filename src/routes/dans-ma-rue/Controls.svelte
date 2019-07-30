@@ -4,21 +4,55 @@
     renderedFeatures,
     filters,
     categories,
-    categoriesList
+    categoriesList,
+    dateSelection
   } from "./stores.js";
 
   let d3;
   let graphWidth;
   let graphHeight;
   let proportionsSize;
-  let margin = 30;
+
+  const bottomMargin = 20;
+
   // the d3 objects that we'll reuse (generators and scales)
   let stack;
   let area;
   let x, y;
   let svg;
   let path;
+  let xAxis;
 
+  let graphHovered = false;
+  let dateOffset = 0;
+  let selectionDown = 0;
+  let selectionUp = 0;
+  let selectionHover = 0;
+
+  $: selection =
+    selectionDown && selectionUp
+      ? [
+          Math.min(selectionDown, selectionUp),
+          Math.max(selectionDown, selectionUp)
+        ]
+      : [];
+
+  $: tempSelection =
+    selectionDown && selectionHover
+      ? [
+          Math.min(selectionDown, selectionHover),
+          Math.max(selectionDown, selectionHover)
+        ]
+      : [];
+
+  $: dateSelection.set(selection);
+
+  function resetGraphSelection() {
+    selectionDown = 0;
+    selectionUp = 0;
+  }
+
+  // get an array of {type: count}[] for each month between 2012/07 and 2018/12
   $: counts = $renderedFeatures.reduce(
     (o, f) => {
       const date = new Date(f.properties.datedecl);
@@ -33,6 +67,7 @@
     },
     // 79 months between 2012/07 and 2018/12
     new Array(79).fill(0).map(() =>
+      // empty {type: 0} object with all types
       categoriesList.reduce((a, l) => {
         a[l] = 0;
         return a;
@@ -57,9 +92,6 @@
   }
 
   function initializeGraph() {
-    const width = graphWidth - 2 * margin;
-    const height = graphHeight - 2 * margin;
-
     d3.select("#graph")
       .selectAll("svg")
       .remove();
@@ -67,17 +99,16 @@
     svg = d3
       .select("#graph")
       .append("svg")
-      .attr("width", width + 2 * margin)
-      .attr("height", height + 2 * margin);
-
-    svg.append("g").attr("transform", `translate(${margin}, ${margin})`);
+      .attr("width", graphWidth)
+      .attr("height", graphHeight)
+      .attr("class", "absolute z-1");
 
     x = d3
       .scaleTime()
       .domain([new Date(2012, 6, 1), new Date(2018, 11, 31)])
-      .range([0, width]);
+      .range([0, graphWidth]);
 
-    y = d3.scaleLinear().range([height, 0]);
+    y = d3.scaleLinear().range([graphHeight - bottomMargin, 0]);
 
     // stack generator that takes counts in input
     stack = d3.stack().keys(categoriesList);
@@ -94,7 +125,6 @@
     y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
 
     path = svg
-      .select("g")
       .selectAll("path")
       .data(series)
       .enter()
@@ -102,11 +132,10 @@
       .attr("d", area)
       .attr("fill", d => categories[d.key]);
 
-    svg
-      .select("g")
+    xAxis = svg
       .append("g")
       .attr("class", "xaxis")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(0, ${graphHeight - bottomMargin})`)
       .call(d3.axisBottom(x));
   }
 
@@ -114,23 +143,34 @@
     counts;
     graphWidth;
     if (d3) {
-      console.log("here");
       // why doesn't resize work?
-      // svg.attr("width", graphWidth);
-      // x.range([0, graphWidth - 2 * margin]);
+      svg.attr("width", graphWidth);
+      x.range([0, graphWidth]);
+      xAxis.transition();
 
       const series = stack(counts);
       y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
-
-      console.log(x.domain(), y.domain(), series);
 
       path
         .data(series)
         .transition()
         .attr("d", area);
-
-      // initializeGraph();
     }
+  }
+
+  function onGraphMouseMove(e) {
+    graphHovered = true;
+    dateOffset = e.offsetX;
+    selectionHover = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseDown(e) {
+    selectionUp = 0;
+    selectionDown = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseUp(e) {
+    selectionUp = x.invert(e.offsetX);
   }
 </script>
 
@@ -156,11 +196,45 @@
     {/each}
   </div>
 
-  <div
-    id="graph"
-    class="flex-grow-1 h-100"
-    bind:offsetWidth={graphWidth}
-    bind:offsetHeight={graphHeight} />
+  <div class="flex-grow-1 h-100 flex pa4">
+    <div
+      id="graph"
+      class="flex-grow-1 relative"
+      bind:offsetWidth={graphWidth}
+      bind:offsetHeight={graphHeight}>
+      {#if graphHovered}
+        <div
+          class="bg-black absolute z-2"
+          style="width: 1px; left: {dateOffset}px; top: 0; bottom: {bottomMargin}px;" />
+      {/if}
+
+      {#if selection.length}
+        <div
+          class="bg-black-30 absolute z-2"
+          style="width: {x(selection[1]) - x(selection[0])}px; left: {x(selection[0])}px;
+          top: 0; bottom: {bottomMargin}px;" />
+      {:else if tempSelection.length}
+        <div
+          class="bg-black-20 absolute z-2"
+          style="width: {x(tempSelection[1]) - x(tempSelection[0])}px; left: {x(tempSelection[0])}px;
+          top: 0; bottom: {bottomMargin}px;" />
+      {/if}
+      <div
+        class="absolute w-100 h-100 z-3"
+        on:mousemove={onGraphMouseMove}
+        on:mouseenter={() => (graphHovered = true)}
+        on:mouseleave={() => (graphHovered = false)}
+        on:mousedown={onGraphMouseDown}
+        on:mouseup={onGraphMouseUp} />
+      {#if selection.length}
+        <button
+          class="absolute white button bg-blue br2 top left z-5"
+          on:click={resetGraphSelection}>
+          reset
+        </button>
+      {/if}
+    </div>
+  </div>
   <!-- TODO with rendered features and display a line chart here with the number
   of claims and a pie chart with the proportion of each type. The pie chart has
   a legend that serves as filters (along with a select all and deselect all
