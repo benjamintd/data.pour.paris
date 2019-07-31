@@ -123,10 +123,9 @@
     counts;
     graphWidth;
     if (d3) {
-      console.log("here");
       // why doesn't resize work?
-      // svg.attr("width", graphWidth);
-      // x.range([0, graphWidth - 2 * margin]);
+      svg.attr("width", graphWidth);
+      x.range([0, graphWidth - 2 * margin]);
 
       const series = stack(counts);
       y.domain([0, d3.max(series[series.length - 1], d => d[1])]);

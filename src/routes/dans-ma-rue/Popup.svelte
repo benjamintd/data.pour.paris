@@ -1,8 +1,6 @@
 <script>
   import { categories } from "./stores";
   export let props;
-
-  $: console.log(props);
 </script>
 
 <style>
