@@ -24,6 +24,11 @@
       const date = new Date(f.properties.datedecl);
       const roundedDate =
         12 * (date.getFullYear() - 2012) + (date.getMonth() - 6);
+
+      if (!o[roundedDate]) {
+        return o;
+      }
+
       if (o[roundedDate][f.properties.type] !== undefined) {
         o[roundedDate][f.properties.type] += 1;
       } else {
@@ -31,8 +36,8 @@
       }
       return o;
     },
-    // 79 months between 2012/07 and 2018/12
-    new Array(79).fill(0).map(() =>
+    // 78 months between 2012/07 and 2018/12
+    new Array(78).fill(0).map(() =>
       categoriesList.reduce((a, l) => {
         a[l] = 0;
         return a;
@@ -74,7 +79,7 @@
 
     x = d3
       .scaleTime()
-      .domain([new Date(2012, 6, 1), new Date(2018, 11, 31)])
+      .domain([new Date(2012, 6, 1), new Date(2018, 11, 1)])
       .range([0, width]);
 
     y = d3.scaleLinear().range([height, 0]);
@@ -106,6 +111,10 @@
       .select("g")
       .append("g")
       .attr("class", "xaxis")
+      .attr(
+        "style",
+        "text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;"
+      )
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x));
   }
@@ -122,23 +131,23 @@
       const series = stack(counts);
       y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
 
-      console.log(x.domain(), y.domain(), series);
-
       path
         .data(series)
         .transition()
         .attr("d", area);
-
-      // initializeGraph();
     }
   }
 </script>
 
-<div class="h5 w-100 pa1 flex items-center">
-  <div class="pl3">
+<div
+  class="absolute bottom-0 h5 w-100 pa1 flex items-center z-2"
+  style="pointer-events: none;">
+  <div
+    class="pa2 ml3 mb5 bg-white-80 br2 shadow-1"
+    style="pointer-events: auto; backdrop-filter: blur(6px);">
     {#each categoriesList as c}
       <div class="pt2 pointer" on:click={() => onCategoryClick(c)}>
-        <div class="w1 h1 relative dib">
+        <div class="w1 h1 relative dib mr2">
           <div
             class="w-100 h-100 br-100 absolute"
             style="background-color: {categories[c]}" />
@@ -158,7 +167,7 @@
 
   <div
     id="graph"
-    class="flex-grow-1 h-100"
+    class="flex-grow-1 h-100 mb5"
     bind:offsetWidth={graphWidth}
     bind:offsetHeight={graphHeight} />
   <!-- TODO with rendered features and display a line chart here with the number

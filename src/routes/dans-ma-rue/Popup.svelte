@@ -1,4 +1,5 @@
 <script>
+  import { categories } from "./stores";
   export let props;
 
   $: console.log(props);
@@ -34,10 +35,12 @@
 
 <!-- todo check that the client-side rendering works well -->
 <div class="popup pa3 white-90">
-  <h1 class="f4">{props.type || 'Signalement'}</h1>
-  {#if props.soustype}
-    <h2 class="f5 fw2 white-70">{props.soustype}</h2>
-  {/if}
+  <h1 class="f4">{props.soustype.split(':').join(' - ') || 'Signalement'}</h1>
+  <div
+    class="f6 fw4 white pa1 mb2 br2 dib shadow-2"
+    style="background-color: {categories[props.type] || categories['Autres']};">
+    {props.type}
+  </div>
   <table>
     {#if props.datedecl}
       <tr>

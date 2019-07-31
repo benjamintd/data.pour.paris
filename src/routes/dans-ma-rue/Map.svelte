@@ -111,4 +111,4 @@
   }
 </script>
 
-<div class="map z-1 w-100 flex-grow-1" bind:this={container} />
+<div class="map z-1 w-100 h-100" bind:this={container} />

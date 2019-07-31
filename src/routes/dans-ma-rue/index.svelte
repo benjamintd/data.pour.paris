@@ -5,9 +5,11 @@
   import Controls from "./Controls.svelte";
 </script>
 
-<div class="flex flex-column aspect-ratio--object">
-  <Map />
-  <Controls />
+<div class="aspect-ratio--object">
+  <div class="relative w-100 h-100">
+    <Map />
+    <Controls />
+  </div>
 </div>
 
 <HomeLink />
