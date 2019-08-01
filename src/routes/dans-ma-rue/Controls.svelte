@@ -63,23 +63,29 @@
   }
 
   function onGraphMouseMove(e) {
-    graphHovered = true;
-    dateOffset = e.offsetX;
-    selectionHover = x.invert(e.offsetX);
+    if (x) {
+      graphHovered = true;
+      dateOffset = e.offsetX;
+      selectionHover = x.invert(e.offsetX);
+    }
   }
 
   function onGraphMouseDown(e) {
-    selectionUp = 0;
-    selectionDown = x.invert(e.offsetX);
+    if (x) {
+      selectionUp = 0;
+      selectionDown = x.invert(e.offsetX);
+    }
   }
 
   function onGraphMouseUp(e) {
-    selectionUp = x.invert(e.offsetX);
+    if (x) {
+      selectionUp = x.invert(e.offsetX);
 
-    dateSelection.set([
-      Math.min(selectionDown, selectionUp),
-      Math.max(selectionDown, selectionUp)
-    ]);
+      dateSelection.set([
+        Math.min(selectionDown, selectionUp),
+        Math.max(selectionDown, selectionUp)
+      ]);
+    }
   }
 
   // get an array of {type: count}[] for each month between 2012/07 and 2018/12
@@ -229,7 +235,7 @@
       class="absolute w-100 h-100 z-5"
       bind:offsetWidth={graphWidth}
       bind:offsetHeight={graphHeight} />
-    {#if graphHovered}
+    {#if graphHovered && x}
       <div
         transition:scale
         class="bg-black absolute z-5"
