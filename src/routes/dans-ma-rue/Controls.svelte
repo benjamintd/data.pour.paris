@@ -80,11 +80,14 @@
   function onGraphMouseUp(e) {
     if (x) {
       selectionUp = x.invert(e.offsetX);
-
-      dateSelection.set([
-        Math.min(selectionDown, selectionUp),
-        Math.max(selectionDown, selectionUp)
-      ]);
+      if (Math.abs(selectionDown - selectionUp) > 24 * 60 * 60 * 1000) {
+        dateSelection.set([
+          Math.min(selectionDown, selectionUp),
+          Math.max(selectionDown, selectionUp)
+        ]);
+      } else {
+        dateSelection.set([]);
+      }
     }
   }
 
@@ -265,14 +268,14 @@
         top: 0; bottom: {bottomMargin}px;" />
     {/if}
     <div
-      class="absolute w-100 h-75 z-3 bottom-0"
+      class="absolute w-100 h-50 z-3 bottom-0"
       style="pointer-events: auto; cursor: col-resize;"
       on:mousemove={onGraphMouseMove}
       on:mouseenter={() => (graphHovered = true)}
       on:mouseleave={() => (graphHovered = false)}
       on:mousedown={onGraphMouseDown}
       on:mouseup={onGraphMouseUp} />
-    {#if selection.length}
+    {#if $dateSelection.length}
       <button
         class="absolute white button bg-gray br2 top left z-5 pointer"
         style="pointer-events: auto;"
