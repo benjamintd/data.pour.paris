@@ -35,7 +35,7 @@
       });
 
       map.addLayer({
-        id: "trains-bearing",
+        id: "trains",
         type: "symbol",
         source: "trains",
         layout: {
@@ -43,6 +43,7 @@
           "icon-image": ["coalesce", ["get", "c"], "#aaa"], // the image is just noted by the (hex) color
           "icon-anchor": "center",
           "icon-allow-overlap": true,
+          "icon-rotation-alignment": "map",
           "icon-size": {
             base: 1,
             stops: [[10, 0.5], [12, 1]]

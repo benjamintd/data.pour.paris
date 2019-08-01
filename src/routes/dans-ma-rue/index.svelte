@@ -21,7 +21,22 @@
   </p>
   <p>
     Une fois zoomé, vous pouvez cliquer sur les plaintes individuelles pour voir
-    leurs propriétés.
+    leur catégorie, date, et adresse.
+  </p>
+  <p>
+    Le graphe décrit l'évolution du nombre de signalements dans le temps ; on
+    remarque que l'application est devenue très populaire au cours de l'année
+    2018. Vous pouvez filtrer la carte de manière temporelle en sélectionnant
+    une plage de temps. Il est aussi possible de filtrer par catégorie. en
+    cliquant sur la légende.
+  </p>
+  <p>
+    Notez qu'il est possible que des changements dans l'application, son
+    marketing, la répartition géographique et démographique de ses utilisateurs,
+    biaisent les données que vous voyez à l'écran. Il est difficile d'en tirer
+    des conclusions quant à la propreté relative des arrondissements, par
+    exemple. Néanmoins, visualiser cette donnée brute permet de voir l'activité
+    de la ville d'une autre manière.
   </p>
   <p slot="license">
     <a
