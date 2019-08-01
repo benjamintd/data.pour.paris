@@ -1,7 +1,13 @@
 <script>
   import { onMount } from "svelte";
-  import { renderedFeatures, filters, categories } from "./stores.js";
+  import {
+    renderedFeatures,
+    filters,
+    categories,
+    hoveredMonthAndYear
+  } from "./stores.js";
   import Popup from "./Popup.svelte";
+  import debounce from "lodash.debounce";
 
   let mapboxgl;
   let container;
@@ -109,6 +115,61 @@
       });
     }
   }
+
+  const shineFeatures = debounce(() => {
+    $renderedFeatures.forEach(f => {
+      if (
+        +f.properties.anneedecl === +$hoveredMonthAndYear.year &&
+        +f.properties.moisdecl === +$hoveredMonthAndYear.month
+      ) {
+        const element = document.createElement("div");
+        element.className = "marker bg-white br-100 h1 w1";
+        const marker = new mapboxgl.Marker({ element })
+          .setLngLat(f.geometry.coordinates)
+          .addTo(map);
+
+        setTimeout(() => {
+          element.remove();
+          marker.remove();
+        }, 1500);
+      }
+    });
+  }, 50);
+
+  $: {
+    if ($renderedFeatures && $hoveredMonthAndYear && map) {
+      shineFeatures();
+    }
+  }
 </script>
+
+<style>
+  :global(.marker) {
+    animation: pulse 2s normal forwards ease-in-out;
+    animation-iteration-count: 1;
+  }
+
+  @keyframes pulse {
+    0% {
+      height: 6px;
+      width: 6px;
+      opacity: 0.01;
+    }
+    45% {
+      opacity: 0.8;
+    }
+
+    90% {
+      height: 25px;
+      width: 25px;
+      opacity: 0.01;
+    }
+    100% {
+      height: 25px;
+      width: 25px;
+      opacity: 0;
+    }
+  }
+</style>
 
 <div class="map z-1 w-100 h-100" bind:this={container} />

@@ -7,7 +7,8 @@
     renderedFeatures,
     filters,
     categories,
-    categoriesList
+    categoriesList,
+    hoveredMonthAndYear
   } from "./stores.js";
 
   let d3;
@@ -22,7 +23,9 @@
   let svg;
   let path;
 
-  let graphX = tweened(0, { duration: 300, easing: cubicOut });
+  let graphX = 0;
+  let tweenedX = tweened(0, { duration: 300, easing: cubicOut });
+  $: tweenedX.set(graphX);
   let graphTimer = 0;
 
   $: counts = $renderedFeatures.reduce(
@@ -140,11 +143,27 @@
   }
 
   function graphMouseMove(e) {
-    graphX.set(e.offsetX);
+    graphX = e.offsetX;
     clearTimeout(graphTimer);
     graphTimer = setTimeout(() => {
       graphTimer = 0;
+      graphX = 0;
+      hoveredMonthAndYear.set({ month: 0, year: 0 });
     }, 1500);
+  }
+
+  $: {
+    if (x && graphX) {
+      let date = x.invert(graphX);
+      let month = date.getMonth() + 1; // js months start at 0
+      let year = date.getFullYear();
+      if (
+        month !== $hoveredMonthAndYear.month ||
+        year !== $hoveredMonthAndYear.year
+      ) {
+        hoveredMonthAndYear.set({ month, year });
+      }
+    }
   }
 </script>
 
@@ -184,12 +203,13 @@
       <div
         class="absolute bg-black"
         transition:scale
-        style="width: 1px; left: {$graphX}px; bottom: {bottomMargin}px; top: 0;">
+        style="width: 1px; left: {$tweenedX}px; bottom: {bottomMargin}px; top:
+        0;">
         <div
           class="top-0 bg-white br2 tc f6 pv1 shadow-2"
           style="min-width: 100px; margin-left: -50px;">
           {x
-            .invert($graphX)
+            .invert(graphX)
             .toLocaleString('fr-FR', {
               month: 'short',
               year: 'numeric'
