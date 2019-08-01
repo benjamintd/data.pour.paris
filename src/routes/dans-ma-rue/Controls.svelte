@@ -1,5 +1,8 @@
 <script>
   import { onMount } from "svelte";
+  import { tweened } from "svelte/motion";
+  import { cubicOut } from "svelte/easing";
+  import { scale } from "svelte/transition";
   import {
     renderedFeatures,
     filters,
@@ -8,16 +11,19 @@
   } from "./stores.js";
 
   let d3;
+
   let graphWidth;
   let graphHeight;
-  let proportionsSize;
-  let margin = 30;
+  const bottomMargin = 20;
   // the d3 objects that we'll reuse (generators and scales)
   let stack;
   let area;
   let x, y;
   let svg;
   let path;
+
+  let graphX = tweened(0, { duration: 300, easing: cubicOut });
+  let graphTimer = 0;
 
   $: counts = $renderedFeatures.reduce(
     (o, f) => {
@@ -62,8 +68,8 @@
   }
 
   function initializeGraph() {
-    const width = graphWidth - 2 * margin;
-    const height = graphHeight - 2 * margin;
+    const width = graphWidth;
+    const height = graphHeight;
 
     d3.select("#graph")
       .selectAll("svg")
@@ -72,17 +78,15 @@
     svg = d3
       .select("#graph")
       .append("svg")
-      .attr("width", width + 2 * margin)
-      .attr("height", height + 2 * margin);
-
-    svg.append("g").attr("transform", `translate(${margin}, ${margin})`);
+      .attr("width", graphWidth)
+      .attr("height", graphHeight);
 
     x = d3
       .scaleTime()
       .domain([new Date(2012, 6, 1), new Date(2018, 11, 1)])
-      .range([0, width]);
+      .range([0, graphWidth]);
 
-    y = d3.scaleLinear().range([height, 0]);
+    y = d3.scaleLinear().range([graphHeight - bottomMargin, 0]);
 
     // stack generator that takes counts in input
     stack = d3.stack().keys(categoriesList);
@@ -99,7 +103,6 @@
     y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
 
     path = svg
-      .select("g")
       .selectAll("path")
       .data(series)
       .enter()
@@ -108,14 +111,13 @@
       .attr("fill", d => categories[d.key]);
 
     svg
-      .select("g")
       .append("g")
       .attr("class", "xaxis")
       .attr(
         "style",
         "text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;"
       )
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(0, ${graphHeight - bottomMargin})`)
       .call(d3.axisBottom(x));
   }
 
@@ -125,7 +127,7 @@
     if (d3) {
       // why doesn't resize work?
       svg.attr("width", graphWidth);
-      x.range([0, graphWidth - 2 * margin]);
+      x.range([0, graphWidth]);
 
       const series = stack(counts);
       y.domain([0, d3.max(series[series.length - 1], d => d[1])]);
@@ -136,13 +138,21 @@
         .attr("d", area);
     }
   }
+
+  function graphMouseMove(e) {
+    graphX.set(e.offsetX);
+    clearTimeout(graphTimer);
+    graphTimer = setTimeout(() => {
+      graphTimer = 0;
+    }, 1500);
+  }
 </script>
 
 <div
-  class="absolute bottom-0 h5 w-100 pa1 flex items-center z-2"
+  class="absolute bottom-0 h5 w-100 pa1 pb4 flex items-center z-2"
   style="pointer-events: none;">
   <div
-    class="pa2 ml3 mb5 bg-white-80 br2 shadow-1"
+    class="pa2 ml3 mb4 bg-white-80 br2 shadow-1"
     style="pointer-events: auto; backdrop-filter: blur(6px);">
     {#each categoriesList as c}
       <div class="pt2 pointer" on:click={() => onCategoryClick(c)}>
@@ -164,15 +174,32 @@
     {/each}
   </div>
 
-  <div
-    id="graph"
-    class="flex-grow-1 h-100 mb5"
-    bind:offsetWidth={graphWidth}
-    bind:offsetHeight={graphHeight} />
-  <!-- TODO with rendered features and display a line chart here with the number
-  of claims and a pie chart with the proportion of each type. The pie chart has
-  a legend that serves as filters (along with a select all and deselect all
-  buttons?). We'll probably want a "normalize" button to see the proportion of
-  claims of each type through time. If we have a "play" mode we'll want sparkles
-  like in escapades :) -->
+  <div class="relative flex-grow-1 h-100 mb4 mh3">
+    <div
+      id="graph"
+      class="absolute w-100 h-100"
+      bind:offsetWidth={graphWidth}
+      bind:offsetHeight={graphHeight} />
+    {#if graphTimer && x}
+      <div
+        class="absolute bg-black"
+        transition:scale
+        style="width: 1px; left: {$graphX}px; bottom: {bottomMargin}px; top: 0;">
+        <div
+          class="top-0 bg-white br2 tc f6 pv1 shadow-2"
+          style="min-width: 100px; margin-left: -50px;">
+          {x
+            .invert($graphX)
+            .toLocaleString('fr-FR', {
+              month: 'short',
+              year: 'numeric'
+            })}
+        </div>
+      </div>
+    {/if}
+    <div
+      class="absolute w-100 h-25 bottom-0"
+      style="pointer-events: auto;"
+      on:mousemove={graphMouseMove} />
+  </div>
 </div>
