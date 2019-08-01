@@ -46,11 +46,40 @@
         ]
       : [];
 
-  $: dateSelection.set(selection);
-
   function resetGraphSelection() {
     selectionDown = 0;
     selectionUp = 0;
+    dateSelection.set([]);
+  }
+
+  function graphMouseMove(e) {
+    graphX = e.offsetX;
+    clearTimeout(graphTimer);
+    graphTimer = setTimeout(() => {
+      graphTimer = 0;
+      graphX = 0;
+      hoveredMonthAndYear.set({ month: 0, year: 0 });
+    }, 1500);
+  }
+
+  function onGraphMouseMove(e) {
+    graphHovered = true;
+    dateOffset = e.offsetX;
+    selectionHover = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseDown(e) {
+    selectionUp = 0;
+    selectionDown = x.invert(e.offsetX);
+  }
+
+  function onGraphMouseUp(e) {
+    selectionUp = x.invert(e.offsetX);
+
+    dateSelection.set([
+      Math.min(selectionDown, selectionUp),
+      Math.max(selectionDown, selectionUp)
+    ]);
   }
 
   // get an array of {type: count}[] for each month between 2012/07 and 2018/12
@@ -166,31 +195,6 @@
         .attr("d", area);
     }
   }
-
-  function graphMouseMove(e) {
-    graphX = e.offsetX;
-    clearTimeout(graphTimer);
-    graphTimer = setTimeout(() => {
-      graphTimer = 0;
-      graphX = 0;
-      hoveredMonthAndYear.set({ month: 0, year: 0 });
-    }, 1500);
-  }
-
-  function onGraphMouseMove(e) {
-    graphHovered = true;
-    dateOffset = e.offsetX;
-    selectionHover = x.invert(e.offsetX);
-  }
-
-  function onGraphMouseDown(e) {
-    selectionUp = 0;
-    selectionDown = x.invert(e.offsetX);
-  }
-
-  function onGraphMouseUp(e) {
-    selectionUp = x.invert(e.offsetX);
-  }
 </script>
 
 <div
@@ -222,28 +226,40 @@
   <div class="relative flex-grow-1 h-100 mb4 mh3">
     <div
       id="graph"
-      class="absolute w-100 h-100"
+      class="absolute w-100 h-100 z-5"
       bind:offsetWidth={graphWidth}
       bind:offsetHeight={graphHeight} />
     {#if graphHovered}
       <div
-        class="bg-black absolute z-2"
-        style="width: 1px; left: {dateOffset}px; top: 0; bottom: {bottomMargin}px;" />
+        transition:scale
+        class="bg-black absolute z-5"
+        style="width: 1px; left: {dateOffset}px; top: 0; bottom: {bottomMargin}px;">
+        <div
+          class="top-0 bg-white br2 tc f6 pv1 shadow-2"
+          style="min-width: 100px; margin-left: -50px;">
+          {x
+            .invert(dateOffset)
+            .toLocaleString('fr-FR', {
+              month: 'short',
+              year: 'numeric'
+            })}
+        </div>
+      </div>
     {/if}
 
     {#if selection.length}
       <div
-        class="bg-black-30 absolute z-2"
+        class="bg-black-20 absolute z-2"
         style="width: {x(selection[1]) - x(selection[0])}px; left: {x(selection[0])}px;
         top: 0; bottom: {bottomMargin}px;" />
     {:else if tempSelection.length}
       <div
-        class="bg-black-20 absolute z-2"
+        class="bg-black-10 absolute z-2"
         style="width: {x(tempSelection[1]) - x(tempSelection[0])}px; left: {x(tempSelection[0])}px;
         top: 0; bottom: {bottomMargin}px;" />
     {/if}
     <div
-      class="absolute w-100 h-50 z-3 bottom-0"
+      class="absolute w-100 h-75 z-3 bottom-0"
       style="pointer-events: auto; cursor: col-resize;"
       on:mousemove={onGraphMouseMove}
       on:mouseenter={() => (graphHovered = true)}
@@ -252,10 +268,10 @@
       on:mouseup={onGraphMouseUp} />
     {#if selection.length}
       <button
-        class="absolute white button bg-blue br2 top left z-5 pointer"
+        class="absolute white button bg-gray br2 top left z-5 pointer"
         style="pointer-events: auto;"
         on:click={resetGraphSelection}>
-        reset
+        réinitialiser
       </button>
     {/if}
   </div>

@@ -74,33 +74,24 @@
 
   $: {
     if (map && map.isStyleLoaded()) {
-      if ($filters.length > 0) {
-        let f;
-        if ($filters.length === 1 && $filters[0] === "Autres") {
-          f = [
-            "all",
-            ...Object.keys(categories).map(c => ["!=", ["get", "type"], c])
-          ];
-        } else {
-          f = ["any", ...$filters.map(c => ["==", ["get", "type"], c])];
-        }
-        map.setFilter("dansmarue-points", f);
-        map.setFilter("dansmarue-heatmap", f);
-        mapFilter = f;
-      } else {
-        map.setFilter("dansmarue-points", null);
-        map.setFilter("dansmarue-heatmap", null);
-        mapFilter = null;
-      }
-      setTimeout(() => setRenderedFeatures(), 300);
-    }
-  }
+      let f = ["all", true];
 
-  $: {
-    if (map && map.isStyleLoaded()) {
-      // todo how do we do to keep the graph full with all the features but hide some still?
+      // Add type filters that are common for the graph (ghost layer) and the map
+      if ($filters.length === 1 && $filters[0] === "Autres") {
+        f.push([
+          "all",
+          ...Object.keys(categories).map(c => ["!=", ["get", "type"], c])
+        ]);
+      } else if ($filters.length > 0) {
+        f.push(["any", ...$filters.map(c => ["==", ["get", "type"], c])]);
+      }
+
+      mapFilter = [...f];
+      map.setFilter("dansmarue-points-ghost", mapFilter);
+
+      // add the date selection filters that are only for the visible layers
       if ($dateSelection.length) {
-        const f = [
+        f.push([
           "all",
           [
             ">=",
@@ -112,17 +103,20 @@
             ["get", "datedecl"],
             new Date($dateSelection[1]).toISOString().split("T")[0]
           ]
-        ];
-
-        console.log(f);
+        ]);
       }
+
+      map.setFilter("dansmarue-points", f);
+      map.setFilter("dansmarue-heatmap", f);
+
+      setTimeout(() => setRenderedFeatures(), 150);
     }
   }
 
   async function setRenderedFeatures() {
     await waitForMap();
     const features = map.queryRenderedFeatures({
-      layers: ["dansmarue-points"],
+      layers: ["dansmarue-points-ghost"],
       filter: mapFilter
     });
     renderedFeatures.set(features);
