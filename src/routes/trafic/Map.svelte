@@ -35,7 +35,7 @@
     window.map = map;
 
     map.on("load", async () => {
-      const fc = await fetch("/trafic.geojson")
+      const fc = await fetch("/api/trafic/june.geojson")
         .then(res => res.json())
         .then(fc => {
           // set ids for each feature
