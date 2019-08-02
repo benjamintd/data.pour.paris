@@ -20,7 +20,7 @@
 
 <div
   transition:fade
-  class="w-100 h-100 absolute flex justify-center items-center z-9999"
+  class="w-100 h-100 absolute flex justify-center items-center z-999"
   style="background-color: rgba(0, 0, 0, 0.3);">
   <div class="relative" style="height: 40px; width: 40px;">
     <div class="spin absolute w-100 h-100">

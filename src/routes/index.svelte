@@ -34,6 +34,11 @@
         <a href="eclairage">éclairage public de la ville</a>
       </li>
       <li>
+        <a href="dans-ma-rue">
+          historique des signalements de l'application Dans Ma Rue
+        </a>
+      </li>
+      <li>
         <a href="live-metro">posititon des métros en temps réel</a>
       </li>
     </ul>

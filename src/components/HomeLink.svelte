@@ -11,7 +11,7 @@
 </style>
 
 <div
-  class="ma3 absolute z-999 pointer dib flex flex-row items-center"
+  class="ma3 absolute z-9999 pointer dib flex flex-row items-center"
   on:mouseenter={() => (hover = true)}
   on:mouseleave={() => (hover = false)}>
   <a href="/">
