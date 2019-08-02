@@ -1,5 +1,4 @@
 <script>
-
   import { onMount } from "svelte";
   import { featureCollection, time } from "./stores.js";
 
@@ -20,8 +19,15 @@
   };
 
   $: {
-    for (let id = 0; id < $featureCollection.length; id++) {
-      map.setFeatureState({id, source: 'runners' }, {density: featureCollection.features[id].properties.densities[$time]})
+    if (map && map.isStyleLoaded()) {
+      for (let id = 0; id < $featureCollection.features.length; id++) {
+        map.setFeatureState(
+          { id, source: "runners" },
+          {
+            density: $featureCollection.features[id].properties.densities[$time]
+          }
+        );
+      }
     }
   }
 
@@ -33,18 +39,25 @@
 
     map = new mapboxgl.Map({
       container,
-      style: "mapbox://styles/mapbox/dark-v9",
+      style: "mapbox://styles/mapbox/light-v9",
       center: [2.343, 48.858],
-      zoom: 11
+      zoom: 11,
+      interactive: false
     });
     window.map = map;
 
     map.on("load", async () => {
-      const fc = await fetch("/api/marathon/fc.geojson")
+      map.fitBounds([
+        [2.197408, 48.806339], // Southwest coordinates
+        [2.472066, 48.910929] // Northeast coordinates
+      ]);
+      map.addSource("runners", { type: "geojson", data: strippedGeoJSON });
+
+      const fc = await fetch("/api/marathon/fc.json")
         .then(res => res.json())
         .then(fc => featureCollection.set(fc));
 
-      map.addSource("runners", { type: "geojson", data: strippedGeoJSON });
+      map.getSource("runners").setData(strippedGeoJSON);
 
       map.addLayer(
         {
@@ -52,7 +65,7 @@
           type: "heatmap",
           source: "runners",
           paint: {
-            "heatmap-weight": ['coalesce', ["feature-state", "density"], 0],
+            "heatmap-weight": ["coalesce", ["feature-state", "density"], 0],
             "heatmap-intensity": [
               "interpolate",
               ["linear"],
@@ -67,7 +80,7 @@
               ["linear"],
               ["heatmap-density"],
               0,
-              "rgba(33,102,172,0.3)",
+              "rgba(33,102,172,0.0)",
               0.2,
               "rgb(103,169,207)",
               0.4,

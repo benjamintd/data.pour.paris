@@ -6,3 +6,5 @@ export const featureCollection = writable({
 });
 
 export const time = writable(0);
+export const playing = writable(false);
+export const turbo = writable(false);
