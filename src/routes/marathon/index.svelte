@@ -16,7 +16,7 @@
 <Info>
   <h1>marathon</h1>
   <p>
-    Visualisez la trace de tous les finishers du Marathon de Paris 2018, ainsi
+    Visualisez la trace des 41,700 finishers du Marathon de Paris 2018, ainsi
     que la densité de coureurs au long du parcours au fil du temps.
   </p>
   <p>

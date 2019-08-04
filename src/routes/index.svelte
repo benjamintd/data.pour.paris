@@ -41,6 +41,9 @@
       <li>
         <a href="live-metro">posititon des métros en temps réel</a>
       </li>
+      <li>
+        <a href="marathon">parcours des finishers du maration de Paris 2018</a>
+      </li>
     </ul>
   </div>
 </div>
