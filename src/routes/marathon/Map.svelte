@@ -39,7 +39,7 @@
 
     map = new mapboxgl.Map({
       container,
-      style: "mapbox://styles/mapbox/light-v9",
+      style: "mapbox://styles/benjamintd/cjywy534807711cpdzsn553u8",
       center: [2.343, 48.858],
       zoom: 11,
       interactive: false
@@ -73,27 +73,31 @@
               12,
               0.007,
               17,
-              0.004
+              0.003
             ],
             "heatmap-color": [
               "interpolate",
               ["linear"],
               ["heatmap-density"],
               0,
-              "rgba(33,102,172,0.0)",
+              "rgba(255,255,230,0.0)",
+              0.01,
+              "#0c2c84",
+              0.0101,
+              "rgba(255,255,230,0.0)",
               0.2,
-              "rgb(103,169,207)",
+              "#ffffcc",
               0.4,
-              "rgb(209,229,240)",
+              "#a1dab4",
               0.6,
-              "rgb(240, 196, 131)",
+              "#41b6c4",
               0.8,
-              "rgb(239,138,98)",
+              "#2c7fb8",
               1,
-              "rgb(178,24,43)"
+              "#253494"
             ],
             // Adjust the heatmap radius by zoom level
-            "heatmap-radius": 11,
+            "heatmap-radius": 8,
             "heatmap-opacity": [
               "interpolate",
               ["linear"],

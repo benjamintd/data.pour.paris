@@ -28,6 +28,15 @@
   <p slot="license">
     Données anonymisées et aggrégées depuis l'API de RTRT (Reat-Time Race
     Tracking), partenaire du Schneider Electric Marathon de Paris 2018.
+    <br />
+    Icônes:
+    <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a>
+    <a
+      href="http://creativecommons.org/licenses/by/3.0/"
+      title="Creative Commons BY 3.0"
+      target="_blank">
+      CC 3.0 BY
+    </a>
   </p>
 </Info>
 

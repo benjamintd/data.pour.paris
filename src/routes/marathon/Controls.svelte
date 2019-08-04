@@ -134,9 +134,9 @@
   }
 </script>
 
-<div class="h5 flex flex-row w-100" style="user-select: none;">
+<div class="flex flex-row-ns flex-column w-100" style="user-select: none;">
   <Play />
-  <div class="flex-grow-1 w-100 flex pa3">
+  <div class="h5 flex-grow-1 w-100 dn flex-ns pa3">
     <div
       class="flex-grow-1"
       id="graph"
