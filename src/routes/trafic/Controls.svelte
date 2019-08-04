@@ -124,8 +124,8 @@
           } else if (data[i - 1] && data[i + 1]) {
             return y((data[i - 1].q + data[i + 1].q) / 2);
           } else return 0;
-        }) // if 0, average the neighboring values
-        .curve(d3.curveMonotoneX); // apply smoothing to the line
+        }); // if 0, average the neighboring values
+      // .curve(d3.curveMonotoneX); // apply smoothing to the line
 
       // draw line
       d3.select("#controls-graph")
@@ -147,7 +147,7 @@
   }
 </style>
 
-<div class="h6 w-100 pa1 flex items-stretch">
+<div class="h6 w-100 pa1 flex items-stretch" style="user-select: none;">
   <Play />
   <div class="relative flex-grow-1 flex flex-column relative h-100">
     <div
