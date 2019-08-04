@@ -208,7 +208,7 @@
 
 <div
   class="absolute bottom-0 h5 w-100 pa1 pb4 flex items-center z-2"
-  style="pointer-events: none;">
+  style="pointer-events: none; user-select: none;">
   <div
     class="pa2 ml3 mb4 bg-white-80 br2 shadow-1"
     style="pointer-events: auto; backdrop-filter: blur(6px);">

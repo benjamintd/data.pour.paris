@@ -1,15 +1,21 @@
 <script>
-  import { time, playing } from "./stores.js";
+  import { time, playing, minTime, maxTime, startDate } from "./stores.js";
 
   let previousAnimationTimestamp = 0;
-  const maxTime = 570; // in minutes after the first start
 
-  let sliderValue;
+  let sliderValue = 50;
+  let date = startDate;
   $: speedValue = 100 - sliderValue;
 
   $: {
     $playing;
     animationStep();
+  }
+
+  $: {
+    let newDate = new Date(startDate);
+    newDate.setMinutes(newDate.getMinutes() + $time);
+    date = newDate;
   }
 
   function animationStep(t) {
@@ -21,15 +27,20 @@
         }
         requestAnimationFrame(animationStep);
       } else {
-        playing.set(false);
-        time.set(0);
+        startOver();
       }
     }
+  }
+
+  function startOver() {
+    playing.set(false);
+    time.set(minTime);
   }
 </script>
 
 <style>
   .button {
+    border: 1px solid #ccc;
     box-shadow: 0px 2px 6px 2px rgba(0, 0, 0, 0.1);
   }
 
@@ -80,9 +91,25 @@
       </svg>
     {/if}
   </div>
-  <div class="pt4 ph2 f2">
-    🚶‍♀️
-    <input type="range" bind:value={sliderValue} min="0" max="100" value="50" />
-    🏃‍♀️
+  <div class="pt4 ph2 f2 nowrap">
+    🐢
+    <input
+      type="range"
+      class="pointer"
+      bind:value={sliderValue}
+      min="0"
+      max="100"
+      value="50" />
+    🐇
+  </div>
+  <div class="f3 code">
+    {date.toLocaleString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hc: 'h24'
+    })}
+  </div>
+  <div class="f4 button code mt2 pointer pa2" on:click={startOver}>
+    recommencer
   </div>
 </div>
