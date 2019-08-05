@@ -17,7 +17,7 @@
       </div>
     </a>
     <div>
-      <h1 class="f1-l f1-m f2 mv2">Open&nbsp;Data&nbsp;Paris</h1>
+      <h1 class="f1-l f1-m f2 mv2">data.pour.paris</h1>
     </div>
     <div class="ml-auto-l ml-auto-m">
       <Github />

@@ -1,4 +1,3 @@
 {
-  "editor.formatOnSave": true,
-  "workbench.colorCustomizations": {}
+  "editor.formatOnSave": true
 }

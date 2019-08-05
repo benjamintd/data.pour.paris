@@ -20,7 +20,7 @@
       <div
         transition:fly={{ duration: 300, x: -100, y: 0, opacity: 0 }}
         class="logotype dib ml2 f3 b black">
-        Open&nbsp;Data&nbsp;Paris
+        data.pour.paris
       </div>
     {/if}
   </div>

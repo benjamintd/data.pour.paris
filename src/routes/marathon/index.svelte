@@ -22,7 +22,8 @@
   <p>
     Le graphe représente les 42,125km du parcours en abscisse, la densité de
     coureurs en ordonnée, et la vitesse moyenne à chaque instant en couleur (du
-    jaune, 8km/h, au violet, 18km/h).
+    jaune, 8km/h, au violet, 18km/h). Les premiers coureurs qui terminent en
+    moins de deux heures sont les marathoniens en fauteuil roulant.
   </p>
   <p>Vous pouvez changer la vitesse de l'animation grâce au slider.</p>
   <p slot="license">
