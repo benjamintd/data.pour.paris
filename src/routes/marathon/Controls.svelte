@@ -103,7 +103,7 @@
       .datum(densities.map(d => d[0]))
       .attr("d", line)
       .attr("stroke", "url(#speedGradient)")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 2)
       .attr("fill", "none");
 
     svg
