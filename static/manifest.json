@@ -1,8 +1,8 @@
 {
   "background_color": "#ffffff",
   "theme_color": "#333333",
-  "name": "Open Data Paris",
-  "short_name": "OpenDataParis",
+  "name": "data pour paris",
+  "short_name": "data.pour.paris",
   "display": "minimal-ui",
   "start_url": "/",
   "icons": [

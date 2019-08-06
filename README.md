@@ -1,4 +1,4 @@
-# Open Data Paris
+# data.pour.paris
 
 Visualisations de l'open-data parisienne.
 
@@ -16,5 +16,5 @@ Le tout est déployé avec [Now](https://zeit.co/now).
 
 Déployer cette app nécessite:
 
-- une clé d'API Île de France Mobilités https://opendata.stif.info/pages/api-stif/
-- un compte Amazon Web Services
+- une [clé d'API Île de France Mobilités](https://opendata.stif.info/pages/api-stif/)
+- un compte Amazon Web Services pour mettre en cache les résultats des APIs.
