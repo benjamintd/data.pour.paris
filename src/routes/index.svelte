@@ -1,6 +1,7 @@
 <script>
   import Logo from "../components/Logo.svelte";
   import Github from "../components/Github.svelte";
+  import Preview from "../components/Preview.svelte";
 </script>
 
 <style>
@@ -36,24 +37,17 @@
 
   <div class="ph4">
     <p class="f3 fw2 black-60">visualisations de l'open data parisienne</p>
-    <ul class="lh-copy">
-      <li>
-        <a href="trafic">trafic mesuré du mois de juin 2019</a>
-      </li>
-      <li>
-        <a href="eclairage">éclairage public de la ville</a>
-      </li>
-      <li>
-        <a href="dans-ma-rue">
-          historique des signalements de l'application Dans Ma Rue
-        </a>
-      </li>
-      <li>
-        <a href="live-metro">posititon des métros en temps réel</a>
-      </li>
-      <li>
-        <a href="marathon">parcours des finishers du maration de Paris 2018</a>
-      </li>
-    </ul>
+    <div class="flex flex-row flex-wrap justify-around">
+      <Preview name="trafic">trafic mesuré du mois de juin 2019</Preview>
+      <Preview name="eclairage">éclairage public de la ville</Preview>
+      <Preview name="dans-ma-rue">
+        historique de l'application Dans Ma Rue
+      </Preview>
+      <Preview name="live-metro">posititon des métros en temps réel</Preview>
+      <Preview name="marathon">
+        parcours des finishers du maration de Paris 2018
+      </Preview>
+      <Preview />
+    </div>
   </div>
 </div>

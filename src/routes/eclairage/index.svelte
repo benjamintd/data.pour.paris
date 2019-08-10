@@ -65,12 +65,14 @@
 <div class="aspect-ratio--object" bind:this={container} />
 <HomeLink />
 <Info>
-  <h1>éclairage public</h1>
-  <p>L'ensemble de l'éclairage public hors souterrains.</p>
-  <p>
-    Une fois zoomé, vous pouvez cliquer sur les lampes individuelles pour voir
-    leurs propriétés.
-  </p>
+  <h1 slot="title">Éclairage public</h1>
+  <p slot="gist">L'ensemble de l'éclairage public hors souterrains de Paris.</p>
+  <div slot="details">
+    <p>
+      Une fois zoomé, vous pouvez cliquer sur les lampes individuelles pour voir
+      leurs propriétés (puissance, chaleur, etc.)
+    </p>
+  </div>
   <p slot="license">
     <a
       href="https://opendata.paris.fr/explore/dataset/eclairage-public"

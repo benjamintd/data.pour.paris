@@ -2,14 +2,11 @@
   import Github from "./Github.svelte";
   import { slide, fade } from "svelte/transition";
 
-  let open = false;
+  let open = true;
+  let details = false;
 </script>
 
 <style>
-  .modal {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
   .button {
     box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
   }
@@ -22,17 +19,21 @@
     transform: translateY(1px);
     box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.2);
   }
+
+  summary {
+    user-select: none;
+    outline: 0;
+  }
 </style>
 
 {#if open}
   <div
     transition:fade
-    class="modal absolute w-100 h-100 flex items-center justify-center z-9999
-    pa4"
+    class="absolute pa2 right-0 h-100 w-100 w-33-l z-9999"
     on:click={() => (open = false)}>
     <div
       transition:slide
-      class="pa4 bg-white br1 shadow-1 relative overflow-x-scroll"
+      class="br1 pa4 pt2 bg-white br1 shadow-2 relative overflow-x-scroll"
       style="max-height: 80vh;"
       on:click={e => e.stopPropagation()}>
       <div
@@ -40,13 +41,20 @@
         on:click={() => (open = false)}>
         ✕
       </div>
-      <!-- the content goes here in the slot -->
-      <slot />
-      <p class="f6 black-60">
-        <slot name="license">Données sous license OdbL.</slot>
-      </p>
-      <Github />
-
+      <span class="f6">
+        <slot name="title" />
+      </span>
+      <span class="fw2 lh-copy">
+        <slot name="gist" />
+      </span>
+      <details>
+        <summary class="dib pointer ">plus de détails</summary>
+        <slot name="details" />
+        <p class="f6 black-60">
+          <slot name="license">Données sous license OdbL.</slot>
+        </p>
+        <Github />
+      </details>
     </div>
   </div>
 {:else}
