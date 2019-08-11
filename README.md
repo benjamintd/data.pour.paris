@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/benjamintd/data.pour.paris/9ee8bb3612a1b4bb715f40a3ef2c76fb2e8df723/static/favicon.png" width="150" title="logo">
+</p>
+
 # data.pour.paris
 
 Visualisations de l'open-data parisienne.
@@ -8,7 +12,7 @@ Le but de ce projet est de visualiser les jeux de données mis à disposition pa
 
 Cette application est écrite en [Svelte](https://svelte.dev/) et utilise [Sapper](https://sapper.svelte.dev/) (l'équivalent de Next.js pour Svelte). C'est le filesystem qui sert de point d'entrée pour les pages (`src/routes`).
 
-L'api est écrite en Node.js (bientôt en Typescript 🤞).
+L'api est écrite en Node.js.
 
 Le tout est déployé avec [Now](https://zeit.co/now).
 
