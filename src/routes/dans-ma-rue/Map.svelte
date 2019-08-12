@@ -29,7 +29,7 @@
 
     map.on("load", () => {
       map.on("click", e => {
-        if (map.getZoom() < 15) return;
+        if (map.getZoom() < 13.5) return;
         var bbox = [
           [e.point.x - 2, e.point.y - 2],
           [e.point.x + 2, e.point.y + 2]
@@ -57,7 +57,7 @@
 
       // Change the cursor to a pointer when the mouse is over the states layer.
       map.on("mouseenter", "dansmarue-points", function() {
-        if (map.getZoom() >= 15) {
+        if (map.getZoom() >= 13.5) {
           map.getCanvas().style.cursor = "pointer";
         }
       });

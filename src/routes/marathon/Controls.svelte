@@ -138,9 +138,31 @@
   <Play />
   <div class="h5 flex-grow-1 w-100 dn flex-ns pa3">
     <div
-      class="flex-grow-1"
+      class="flex-grow-1 relative"
       id="graph"
       bind:offsetWidth={graphWidth}
-      bind:offsetHeight={graphHeight} />
+      bind:offsetHeight={graphHeight}>
+      <table class="absolute top-0 right-0 pr3 pt2 f6">
+        <tbody>
+          <tr>
+            <td class="tc">↦</td>
+            <td>parcours en km</td>
+          </tr>
+          <tr>
+            <td class="tc">↥</td>
+            <td>densité en coureurs</td>
+          </tr>
+          <tr>
+            <td>
+              <div
+                class="mr1"
+                style="background: linear-gradient(to right, #ffea05, #de5f63,
+                #9410a0,#110787); height: 12px; width: 30px;" />
+            </td>
+            <td>vitesse moyenne</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

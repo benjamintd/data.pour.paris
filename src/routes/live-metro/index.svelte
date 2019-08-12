@@ -107,21 +107,23 @@
   <HomeLink />
 {/if}
 <Info>
-  <h1>carte des trains d'Île de France Mobilités</h1>
-  <p>
+  <h1 slot="title">Trains d'Île de France</h1>
+  <p slot="gist">
     Voici une carte en direct des trains circulant sur le réseau d'Ile de
     France, grâce aux données en temps réel d'Île de France Mobilités.
   </p>
-  <p>
-    La donnée est la même que celle que l'on peut voir sur les quais du métro,
-    ce qui signifie qu'un traitement est réalisé afin d'estimer leur position à
-    tout moment. En particulier, nous effectuons un calcul de déduplication des
-    trains et une estimation de leur vitesse sur le réseau.
-  </p>
-  <p>
-    La page fait appel aux API d'Île de France Mobilités et peut être un peu
-    longue à charger.
-  </p>
+  <div slot="details">
+    <p>
+      La donnée est la même que celle que l'on peut voir sur les quais du métro,
+      ce qui signifie qu'un traitement est réalisé afin d'estimer leur position
+      à tout moment. En particulier, nous effectuons un calcul de déduplication
+      des trains et une estimation de leur vitesse sur le réseau.
+    </p>
+    <p>
+      La page fait appel aux API d'Île de France Mobilités et peut être un peu
+      longue à charger.
+    </p>
+  </div>
   <p slot="license">
     <a
       href="https://opendata.stif.info/page/api-stif/"
