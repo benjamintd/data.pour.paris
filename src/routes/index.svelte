@@ -17,7 +17,7 @@
 </style>
 
 <svelte:head>
-  <title>Open Data Paris</title>
+  <title>Data Pour Paris</title>
 </svelte:head>
 
 <div class="flex flex-column">
