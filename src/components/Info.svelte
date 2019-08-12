@@ -1,9 +1,20 @@
 <script>
+  import { onMount } from "svelte";
   import Github from "./Github.svelte";
   import { slide, fade } from "svelte/transition";
 
   let open = true;
   let details = false;
+  let shouldRetract = true;
+
+  onMount(() => {
+    setTimeout(() => {
+      if (shouldRetract) {
+        open = false;
+        shouldRetract = false;
+      }
+    }, 7000);
+  });
 </script>
 
 <style>
@@ -48,7 +59,9 @@
         <slot name="gist" />
       </span>
       <details>
-        <summary class="dib pointer ">plus de détails</summary>
+        <summary class="dib pointer " on:click={() => (shouldRetract = false)}>
+          plus de détails
+        </summary>
         <slot name="details" />
         <p class="f6 black-60">
           <slot name="license">Données sous license OdbL.</slot>
