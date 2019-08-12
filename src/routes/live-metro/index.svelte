@@ -110,7 +110,9 @@
   <h1 slot="title">Trains d'Île de France</h1>
   <p slot="gist">
     Voici une carte en direct des trains circulant sur le réseau d'Ile de
-    France, grâce aux données en temps réel d'Île de France Mobilités.
+    France, grâce aux données en temps réel d'Île de France Mobilités. Charger
+    ces données fait massivement appel aux API d'Île de France Mobilités, donc
+    la page peut être longue à charger.
   </p>
   <div slot="details">
     <p>
@@ -120,9 +122,12 @@
       des trains et une estimation de leur vitesse sur le réseau.
     </p>
     <p>
-      La page fait appel aux API d'Île de France Mobilités et peut être un peu
-      longue à charger.
+      Pour cette raison, il est possible que la donnée se décale progressivement
+      par rapport à la situation réelle. De plus, les données récupérées sont
+      précises à la minute près ce qui est parfois insuffisant pour permettre de
+      positionner les trains de manière fiable.
     </p>
+    <p />
   </div>
   <p slot="license">
     <a

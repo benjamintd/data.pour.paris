@@ -27,10 +27,10 @@
     flex-row-m flex-column items-center">
     <a href="/">
       <div class="w2 h2 mr3-l mr3-m logo">
-        <Logo fill="black" />
+        <Logo fill="#001B44" />
       </div>
     </a>
-    <span class="logotype f1-l f1-m f2 mv2">data.pour.paris</span>
+    <span class="logotype f1-l f1-m f2 mv2 navy">data.pour.paris</span>
 
     <div class="ml-auto-l ml-auto-m">
       <Github />
@@ -38,14 +38,11 @@
   </div>
 
   <div class="ph4">
-    <p class="f5 pa3 f4-l pa4-l fw3 lh-copy">
-      👋 bienvenue sur
+    <p class="f4 pa3 f3-l pa4-l fw3 lh-copy tc">
+      Décryptez l'activité de notre capitale avec les visualisations de
       <span class="logotype">data.pour.paris</span>
-      ! Ce site regroupe différentes visualisations dont le thème central est la
-      ville de Paris. Les données proviennent principalement de sources
-      ouvertes.
+      🗺🥖
     </p>
-    <p class="f2 fw2 black-60 tc">visualisations</p>
     <div class="flex flex-row flex-wrap justify-around">
       <Preview name="trafic">trafic mesuré du mois de juin 2019</Preview>
       <Preview name="eclairage">éclairage public de la ville</Preview>
@@ -59,10 +56,11 @@
       <Preview />
     </div>
   </div>
-  <div class="footer fw2 f6 bg-near-white gray pa3 pl4 bt b--moon-gray">
+  <div class="footer fw2 f6 bg-near-white gray pa3 mt4 bt b--moon-gray">
     <p>Made with ♥ in the open by benjamintd</p>
-    <p>Got some ideas? Come say hi!</p>
-    <div>
+    <span>Got some ideas? Come say hi!</span>
+    <div class="pb2 dib">
+      <div class="ph1 dib" />
       <Github fill="#777" />
       <div class="ph1 dib" />
       <Twitter fill="#777" />
