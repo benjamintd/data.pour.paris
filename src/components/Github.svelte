@@ -6,7 +6,8 @@
   href="https://github.com/benjamintd/open-data-paris"
   target="_blank"
   noreferrer
-  noopener>
+  noopener
+  rel="noreferrer">
   <div class="w1 h1 pointer dib">
     <svg
       height="100%"

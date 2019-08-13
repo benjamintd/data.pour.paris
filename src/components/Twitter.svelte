@@ -2,7 +2,12 @@
   export let fill = "#000";
 </script>
 
-<a href="https://twitter.com/_benjamintd" target="_blank" noreferrer noopener>
+<a
+  href="https://twitter.com/_benjamintd"
+  target="_blank"
+  noreferrer
+  noopener
+  rel="noreferrer">
   <div class="w1 h1 pointer dib">
     <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
       <path
