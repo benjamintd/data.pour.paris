@@ -13,7 +13,7 @@
   <HomeLink />
 {/if}
 
-<Info>
+<Info title="Marathon de Paris" link="marathon">
   <h1 slot="title">Marathon de Paris</h1>
   <p slot="gist">
     Visualisez la trace des 41,700 finishers du Marathon de Paris 2018, ainsi

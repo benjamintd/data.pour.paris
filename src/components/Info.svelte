@@ -1,7 +1,10 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, head } from "svelte";
   import Github from "./Github.svelte";
   import { slide, fade } from "svelte/transition";
+
+  export let title = "Data Pour Paris";
+  export let link = "/";
 
   let open = true;
   let details = false;
@@ -37,6 +40,14 @@
   }
 </style>
 
+<svelte:head>
+  <title>{title}</title>
+  <meta property="og:title" content="Data Pour Paris - {title}" />
+  <meta
+    property="og:image"
+    content="https://data.pour.paris/images/{link}.jpg" />
+</svelte:head>
+
 {#if open}
   <div
     transition:fade
@@ -53,7 +64,7 @@
         ✕
       </div>
       <span class="f6">
-        <slot name="title" />
+        <h1>{title}</h1>
       </span>
       <span class="fw2 lh-copy">
         <slot name="gist" />

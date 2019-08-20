@@ -64,8 +64,7 @@
 
 <div class="aspect-ratio--object" bind:this={container} />
 <HomeLink />
-<Info>
-  <h1 slot="title">Éclairage public</h1>
+<Info title="Éclairage public" link="eclairage">
   <p slot="gist">L'ensemble de l'éclairage public hors souterrains de Paris.</p>
   <div slot="details">
     <p>

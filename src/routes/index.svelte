@@ -18,6 +18,10 @@
 
 <svelte:head>
   <title>Data Pour Paris</title>
+  <meta property="og:title" content="Data Pour Paris" />
+  <meta
+    property="og:image"
+    content="https://data.pour.paris/images/eclairage.jpg" />
 </svelte:head>
 
 <div class="flex flex-column">

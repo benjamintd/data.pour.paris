@@ -13,8 +13,7 @@
   <HomeLink />
 {/if}
 
-<Info>
-  <h1 slot="title">Trafic parisien</h1>
+<Info title="Trafic parisien" link="trafic">
   <p slot="gist">
     Voici une visualisation du trafic de juin 2019 tel que mesuré par les
     capteurs permanents posés à Paris.

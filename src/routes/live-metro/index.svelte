@@ -106,8 +106,7 @@
 {:else}
   <HomeLink />
 {/if}
-<Info>
-  <h1 slot="title">Trains d'Île de France</h1>
+<Info title="Trains d'Île de France" link="live-metro">
   <p slot="gist">
     Voici une carte en direct des trains circulant sur le réseau d'Ile de
     France, grâce aux données en temps réel d'Île de France Mobilités. Charger

@@ -13,8 +13,7 @@
 </div>
 
 <HomeLink />
-<Info>
-  <h1 slot="title">Signalements Dans Ma Rue</h1>
+<Info title="Signalements Dans Ma Rue" link="dans-ma-rue">
   <p slot="gist">
     L'ensemble des anomalies signalées dans l'application Dans Ma Rue entre son
     lancement en 2012 et janvier 2019.
