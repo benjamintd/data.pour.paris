@@ -12,6 +12,8 @@
     }
   }
 
+  // @todo add $: {} that filters the data depending on filters in store
+
   onMount(async () => {
     // We load it client-side to avoid server-side-rendering issues with Mapbox that needs a browser context
     mapboxgl = (await import("mapbox-gl")).default;
@@ -28,31 +30,61 @@
 
     map.on("load", async () => {
       // @todo write an api route that calls open data and caches the results (providing a featurecollection straight ahead)
-      fetch(
-        "https://opendata.paris.fr/api/records/1.0/search/?dataset=que-faire-a-paris-&rows=10&facet=category&facet=tags&facet=address_zipcode&facet=address_city&facet=pmr&facet=blind&facet=deaf&facet=access_type&facet=price_type"
-      )
+      fetch("https://datapourparis.benjamintd.now.sh/api/que-faire/events")
         .then(res => res.json())
-        .then(res => {
-          const features = res.records.map((r, i) => ({
-            type: "Feature",
-            id: i,
-            properties: { ...r.fields },
-            geometry: r.geometry
-          }));
-
-          featureCollection.set({ type: "FeatureCollection", features });
+        .then(fc => {
+          featureCollection.set(fc);
         });
 
       map.addSource("events", { type: "geojson", data: $featureCollection });
+      map.addSource("selected", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
       map.addLayer(
         {
           id: "events",
           type: "circle",
           source: "events",
-          paint: {}
+          paint: {
+            "circle-color": [
+              "case",
+              ["feature-state", "seen"],
+              "#fcecc0",
+              "#f0b922"
+            ],
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              14,
+              3,
+              17,
+              10
+            ],
+            "circle-stroke-width": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              14,
+              1,
+              17,
+              3
+            ],
+            "circle-stroke-color": "#000000"
+          }
         },
         "waterway-label"
       );
+      map.addLayer({
+        id: "selected",
+        type: "symbol",
+        source: "selected",
+        layout: {
+          "icon-image": "pin",
+          "icon-anchor": "bottom"
+        }
+      });
 
       map.on("click", function(e) {
         var bbox = [
@@ -63,20 +95,18 @@
           layers: ["events"]
         });
 
-        // remove feature state from previously selected feature
-        if ($selectedFeature > -1) {
-          map.removeFeatureState(
-            { id: $selectedFeature, source: "events" },
-            "selected"
-          );
-        }
-
         if (features.length) {
           const id = features[0].id;
-          map.setFeatureState({ id, source: "events" }, { selected: true });
-          selectedFeature.set(features[0].id);
+          if (id) {
+            map.setFeatureState({ id, source: "events" }, { seen: true });
+          }
+          map.getSource("selected").setData(features[0]);
+          selectedFeature.set(features[0].properties.id);
         } else {
           selectedFeature.set(-1);
+          map
+            .getSource("selected")
+            .setData({ type: "FeatureCollection", features: [] });
         }
       });
 
@@ -97,4 +127,6 @@
   });
 </script>
 
-<div class="map z-1 h-100 flex-grow-1" bind:this={container} />
+<div
+  class="map z-1 h-100 flex-grow-1 absolute w-100 relative-l w-auto-l"
+  bind:this={container} />

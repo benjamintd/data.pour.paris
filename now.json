@@ -13,13 +13,34 @@
       "config": { "distDir": "__sapper__/export" }
     },
     { "src": "src/api/**/*.json", "use": "@now/static" },
-    { "src": "src/api/live-metro/get-train-splits.js", "use": "@now/node" }
+    { "src": "src/api/live-metro/get-train-splits.js", "use": "@now/node" },
+    { "src": "src/api/que-faire/events.js", "use": "@now/node" },
+    { "src": "src/api/que-faire/event.js", "use": "@now/node" }
   ],
   "routes": [
     {
       "src": "/api/live-metro/get-train-splits",
       "dest": "src/api/live-metro/get-train-splits.js",
-      "headers": { "cache-control": "s-maxage=300" }
+      "headers": {
+        "cache-control": "s-maxage=300",
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    {
+      "src": "/api/que-faire/events",
+      "dest": "src/api/que-faire/events.js",
+      "headers": {
+        "cache-control": "s-maxage=3600",
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    {
+      "src": "/api/que-faire/event",
+      "dest": "src/api/que-faire/event.js",
+      "headers": {
+        "cache-control": "s-maxage=3600",
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     { "src": "/api/(.*)", "dest": "src/api/$1" }
   ],

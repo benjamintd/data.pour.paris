@@ -1,25 +1,32 @@
 <script>
   import { onMount } from "svelte";
+  import { slide, fade } from "svelte/transition";
   import { featureCollection, selectedFeature } from "./stores.js";
 
   let info = null;
-  let title = "";
-  let cover = null;
-  let coverUrl = "";
-  let leadText = "";
-  let description = "";
-  let tags = [];
-  let priceType = "";
-  let address = "";
-  let url = "";
+
+  // @todo add filters
 
   $: {
-    const feature = $featureCollection.features[$selectedFeature];
+    const feature = $featureCollection.features.find(
+      f => f.properties.id === $selectedFeature
+    );
     if (feature) {
       info = { ...feature.properties };
-      console.log(feature);
     } else {
       info = null;
+    }
+    if (typeof window !== "undefined" && $selectedFeature !== -1) {
+      window
+        .fetch(
+          `https://datapourparis.benjamintd.now.sh/api/que-faire/event?id=${$selectedFeature}`
+        )
+        .then(res => res.json())
+        .then(f => {
+          if (f.properties.id == $selectedFeature) {
+            info = f.properties;
+          }
+        });
     }
   }
 </script>
@@ -31,11 +38,19 @@
 </style>
 
 <div
-  class="w-50 h-100 z-2 shadow-2 overflow-hidden flex flex-column"
-  style="flex: 0 0 auto;">
-  <div class="bg-black-05 h3 min-h3" />
+  class={`absolute w-50-l w-100 flex flex-column z-2 shadow-2 overflow-hidden ${info ? 'h-100' : ''}`}
+  style="max-height: 100%; flex: 0 0 auto;">
+  <div class="bg-light-gray h3 min-h3" />
   {#if info}
-    <div class="pa3" style="flex: 1 1 auto; overflow-y: auto">
+    <div
+      class="w-100 z-2 flex-grow-1 flex flex-column bg-white pa3 relative"
+      style="flex: 1 1 auto; overflow-y: auto"
+      transition:slide>
+      <div
+        class="absolute right-0 top-0 ma3 pointer"
+        on:click={() => selectedFeature.set(-1)}>
+        ✕
+      </div>
       <h1 class="tc">{info.title}</h1>
       <div
         class="bg-black-05 bt bl br pa2 z-3 flex justify-between items-center"
@@ -76,14 +91,16 @@
             max-width: {info.cover.width}px;" />
         </div>
       {/if}
-      <p class="b">{info.lead_text}</p>
+      {#if info.lead_text}
+        <p class="b">{info.lead_text}</p>
+      {/if}
       {#if info.description}
-        <div class="fw2 lh-copy">
+        <div in:fade class="fw2 lh-copy">
           {@html info.description}
         </div>
       {/if}
       {#if info.date_description}
-        <div class="w-100 br2 ba mt2 pa2 f6 b fw3">
+        <div in:fade class="w-100 br2 ba mt2 pa2 f6 b fw3">
           {@html info.date_description}
         </div>
       {/if}
