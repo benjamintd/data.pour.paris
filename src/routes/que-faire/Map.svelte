@@ -12,6 +12,23 @@
     }
   }
 
+  $: {
+    if (map)
+      if ($selectedFeature !== -1) {
+        const f = $featureCollection.features.find(
+          f => f.properties.id === $selectedFeature
+        );
+        if (f) {
+          map.setFeatureState({ id: f.id, source: "events" }, { seen: true });
+          map.getSource("selected").setData(f);
+        }
+      } else {
+        map
+          .getSource("selected")
+          .setData({ type: "FeatureCollection", features: [] });
+      }
+  }
+
   // @todo add $: {} that filters the data depending on filters in store
 
   onMount(async () => {
@@ -96,17 +113,9 @@
         });
 
         if (features.length) {
-          const id = features[0].id;
-          if (id) {
-            map.setFeatureState({ id, source: "events" }, { seen: true });
-          }
-          map.getSource("selected").setData(features[0]);
           selectedFeature.set(features[0].properties.id);
         } else {
           selectedFeature.set(-1);
-          map
-            .getSource("selected")
-            .setData({ type: "FeatureCollection", features: [] });
         }
       });
 

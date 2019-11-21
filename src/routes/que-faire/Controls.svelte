@@ -16,17 +16,27 @@
     } else {
       info = null;
     }
-    if (typeof window !== "undefined" && $selectedFeature !== -1) {
-      window
-        .fetch(
-          `https://datapourparis.benjamintd.now.sh/api/que-faire/event?id=${$selectedFeature}`
-        )
-        .then(res => res.json())
-        .then(f => {
-          if (f.properties.id == $selectedFeature) {
-            info = f.properties;
-          }
-        });
+    if (typeof window !== "undefined") {
+      if ($selectedFeature !== -1) {
+        window
+          .fetch(
+            `https://datapourparis.benjamintd.now.sh/api/que-faire/event?id=${$selectedFeature}`
+          )
+          .then(res => res.json())
+          .then(f => {
+            if (f.properties.id == $selectedFeature) {
+              info = f.properties;
+            }
+          });
+
+        window.history.pushState(
+          {},
+          feature ? feature.properties.title : "Que Faire à Paris ?",
+          `que-faire/${$selectedFeature}`
+        );
+      } else {
+        window.history.pushState({}, "Que Faire à Paris ?", `que-faire`);
+      }
     }
   }
 </script>
