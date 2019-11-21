@@ -15,12 +15,22 @@ module.exports = async (req, res) => {
             title,
             price_type,
             address_name,
+            date_start,
+            date_end,
             ...rest
           } = rec.fields;
           return {
             type: "Feature",
             id: i,
-            properties: { id, cover, title, price_type, address_name },
+            properties: {
+              id,
+              cover,
+              title,
+              price_type,
+              address_name,
+              date_start,
+              date_end
+            },
             geometry: rec.geometry
           };
         });

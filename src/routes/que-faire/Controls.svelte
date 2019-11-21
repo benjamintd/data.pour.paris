@@ -2,10 +2,9 @@
   import { onMount } from "svelte";
   import { slide, fade } from "svelte/transition";
   import { featureCollection, selectedFeature } from "./stores.js";
+  import Filters from "./Filters.svelte";
 
   let info = null;
-
-  // @todo add filters
 
   $: {
     const feature = $featureCollection.features.find(
@@ -50,7 +49,7 @@
 <div
   class={`absolute w-50-l w-100 flex flex-column z-2 shadow-2 overflow-hidden ${info ? 'h-100' : ''}`}
   style="max-height: 100%; flex: 0 0 auto;">
-  <div class="bg-light-gray h3 min-h3" />
+  <Filters />
   {#if info}
     <div
       class="w-100 z-2 flex-grow-1 flex flex-column bg-white pa3 relative"
@@ -83,7 +82,6 @@
           <a href="https://quefaire.paris.fr/{info.id}">Voir sur paris.fr</a>
         </div>
       </div>
-      <!-- @todo add a recap div with date_description and price_type, tags, address, transport -->
       {#if info.cover}
         <div
           class="w-100 relative flex justify-center"

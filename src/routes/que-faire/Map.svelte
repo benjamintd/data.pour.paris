@@ -1,6 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import { featureCollection, selectedFeature } from "./stores.js";
+  import {
+    featureCollection,
+    selectedFeature,
+    activeFilter,
+    filterFeatures
+  } from "./stores.js";
 
   let mapboxgl;
   let container;
@@ -13,7 +18,7 @@
   }
 
   $: {
-    if (map)
+    if (map && map.getSource("selected")) {
       if ($selectedFeature !== -1) {
         const f = $featureCollection.features.find(
           f => f.properties.id === $selectedFeature
@@ -27,6 +32,15 @@
           .getSource("selected")
           .setData({ type: "FeatureCollection", features: [] });
       }
+    }
+  }
+
+  $: {
+    if (map && map.getSource("events")) {
+      map
+        .getSource("events")
+        .setData(filterFeatures($featureCollection, $activeFilter));
+    }
   }
 
   // @todo add $: {} that filters the data depending on filters in store
@@ -53,7 +67,10 @@
           featureCollection.set(fc);
         });
 
-      map.addSource("events", { type: "geojson", data: $featureCollection });
+      map.addSource("events", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
       map.addSource("selected", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] }
