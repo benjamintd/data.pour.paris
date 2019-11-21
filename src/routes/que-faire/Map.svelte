@@ -83,9 +83,9 @@
           paint: {
             "circle-color": [
               "case",
-              ["feature-state", "seen"],
-              "#fcecc0",
-              "#f0b922"
+              ["to-boolean", ["feature-state", "seen"]],
+              "#c4d9f5",
+              "#357edd"
             ],
             "circle-radius": [
               "interpolate",
