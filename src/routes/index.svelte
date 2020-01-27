@@ -54,7 +54,7 @@
         <Preview name="dans-ma-rue">
           historique de l'application Dans Ma Rue
         </Preview>
-        <Preview name="live-metro">posititon des métros en temps réel</Preview>
+        <!-- <Preview name="live-metro">posititon des métros en temps réel</Preview> -->
         <Preview name="marathon">
           parcours des finishers du maration de Paris 2018
         </Preview>
