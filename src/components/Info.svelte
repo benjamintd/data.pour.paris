@@ -1,5 +1,5 @@
 <script>
-  import { onMount, head } from "svelte";
+  import { onMount } from "svelte";
   import Github from "./Github.svelte";
   import { slide, fade } from "svelte/transition";
 
