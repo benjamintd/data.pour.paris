@@ -98,8 +98,7 @@
       class="pointer"
       bind:value={sliderValue}
       min="0"
-      max="100"
-      value="50" />
+      max="100" />
     🐇
   </div>
   <div class="f3 code">

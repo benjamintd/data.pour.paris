@@ -49,6 +49,7 @@
         🗺🥖
       </p>
       <div class="flex flex-row flex-wrap justify-around">
+        <Preview name="elections">votes pour l'élection municipale</Preview>
         <Preview name="trafic">trafic mesuré du mois de juin 2019</Preview>
         <Preview name="eclairage">éclairage public de la ville</Preview>
         <Preview name="dans-ma-rue">

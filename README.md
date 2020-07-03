@@ -15,10 +15,3 @@ Cette application est écrite en [Svelte](https://svelte.dev/) et utilise [Sappe
 L'api est écrite en Node.js.
 
 Le tout est déployé avec [Now](https://zeit.co/now).
-
-## Environnement
-
-Déployer cette app nécessite:
-
-- une [clé d'API Île de France Mobilités](https://opendata.stif.info/pages/api-stif/)
-- un compte Amazon Web Services pour mettre en cache les résultats des APIs.
