@@ -55,12 +55,14 @@
         <Preview name="dans-ma-rue">
           historique de l'application Dans Ma Rue
         </Preview>
-        <!-- <Preview name="live-metro">posititon des métros en temps réel</Preview> -->
         <Preview name="marathon">
           parcours des finishers du maration de Paris 2018
         </Preview>
         <Preview name="que-faire">que faire à Paris ?</Preview>
         <Preview name="greves">Trafic cycliste pendant la grève</Preview>
+        <Preview name="mobilites-douces">
+          Carte piétonne et cyclable de Paris
+        </Preview>
       </div>
     </div>
   </main>
