@@ -14,7 +14,7 @@
     "@turf/turf": "^5.1.6",
     "cheap-ruler": "^2.5.1",
     "compression": "^1.7.1",
-    "d3": "^5.9.7",
+    "d3": "^7.6.1",
     "lodash": "^4.17.19",
     "lodash.chunk": "^4.2.0",
     "lodash.debounce": "^4.0.8",
