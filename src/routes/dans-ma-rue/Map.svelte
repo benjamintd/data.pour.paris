@@ -4,7 +4,7 @@
     renderedFeatures,
     filters,
     categories,
-    dateSelection
+    dateSelection,
   } from "./stores.js";
   import Popup from "./Popup.svelte";
 
@@ -22,20 +22,20 @@
       container,
       style: "mapbox://styles/benjamintd/cjxw3g8lv1k301dmsk77aepdk",
       center: [2.3387, 48.8597],
-      zoom: 11
+      zoom: 11,
     });
 
     let popupContent = document.createElement("div");
 
     map.on("load", () => {
-      map.on("click", e => {
+      map.on("click", (e) => {
         if (map.getZoom() < 13.5) return;
         var bbox = [
           [e.point.x - 2, e.point.y - 2],
-          [e.point.x + 2, e.point.y + 2]
+          [e.point.x + 2, e.point.y + 2],
         ];
         var features = map.queryRenderedFeatures(bbox, {
-          layers: ["dansmarue-points"]
+          layers: ["dansmarue-points"],
         });
 
         if (features.length) {
@@ -48,22 +48,22 @@
           const popup = new Popup({
             target: popupContent,
             props: {
-              props: features[0].properties
+              props: features[0].properties,
             },
-            hydrate: true
+            hydrate: true,
           });
         }
       });
 
       // Change the cursor to a pointer when the mouse is over the states layer.
-      map.on("mouseenter", "dansmarue-points", function() {
+      map.on("mouseenter", "dansmarue-points", function () {
         if (map.getZoom() >= 13.5) {
           map.getCanvas().style.cursor = "pointer";
         }
       });
 
       // Change it back to a pointer when it leaves.
-      map.on("mouseleave", "dansmarue-points", function() {
+      map.on("mouseleave", "dansmarue-points", function () {
         map.getCanvas().style.cursor = "";
       });
 
@@ -80,10 +80,10 @@
       if ($filters.length === 1 && $filters[0] === "Autres") {
         f.push([
           "all",
-          ...Object.keys(categories).map(c => ["!=", ["get", "type"], c])
+          ...Object.keys(categories).map((c) => ["!=", ["get", "type"], c]),
         ]);
       } else if ($filters.length > 0) {
-        f.push(["any", ...$filters.map(c => ["==", ["get", "type"], c])]);
+        f.push(["any", ...$filters.map((c) => ["==", ["get", "type"], c])]);
       }
 
       mapFilter = [...f];
@@ -96,13 +96,13 @@
           [
             ">=",
             ["get", "datedecl"],
-            new Date($dateSelection[0]).toISOString().split("T")[0]
+            new Date($dateSelection[0]).toISOString().split("T")[0],
           ],
           [
             "<=",
             ["get", "datedecl"],
-            new Date($dateSelection[1]).toISOString().split("T")[0]
-          ]
+            new Date($dateSelection[1]).toISOString().split("T")[0],
+          ],
         ]);
       }
 
@@ -117,7 +117,7 @@
     await waitForMap();
     const features = map.queryRenderedFeatures({
       layers: ["dansmarue-points-ghost"],
-      filter: mapFilter
+      filter: mapFilter,
     });
     renderedFeatures.set(features);
   }
