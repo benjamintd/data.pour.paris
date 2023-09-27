@@ -1,8 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import {
-    currentTimestamp,
-    featureCollection  } from "./stores.js";
+  import { currentTimestamp, featureCollection } from "./stores.js";
 
   let mapboxgl;
   let container;
@@ -16,18 +14,17 @@
       geometry: f.geometry,
       properties: {} // don't include the data in the map features as a performance improvement
     }))
-
   };
 
   $: {
-        console.log(strippedGeoJSON)
+    console.log(strippedGeoJSON);
   }
 
   onMount(async () => {
     // We load it client-side to avoid server-side-rendering issues with Mapbox that needs a browser context
     mapboxgl = (await import("mapbox-gl")).default;
     mapboxgl.accessToken =
-      "pk.eyJ1IjoiYmVuamFtaW50ZCIsImEiOiJjaW83enIwNjYwMnB1dmlsejN6cDBzbm93In0.0ZOGwSLp8OjW6vCaEKYFng";
+      "pk.eyJ1IjoiYmVuamFtaW50ZCIsImEiOiJjbG4xaDI3ZnAwMG1yMmtwZm1tejhxeTdrIn0.2QEK7gosDnyJ2yaBMczX4w";
 
     map = new mapboxgl.Map({
       container,
@@ -38,7 +35,9 @@
     window.map = map;
 
     map.on("load", async () => {
-      const fc = await fetch("https://gist.githubusercontent.com/benjamintd/13fc2ee10e3624defa32c4088a603480/raw/1e4ce8e348c4f7722bd8e1968b07a290d1dd6913/velo.json")
+      const fc = await fetch(
+        "https://gist.githubusercontent.com/benjamintd/13fc2ee10e3624defa32c4088a603480/raw/1e4ce8e348c4f7722bd8e1968b07a290d1dd6913/velo.json"
+      )
         .then(res => res.json())
         .then(fc => {
           // set ids for each feature
@@ -50,32 +49,39 @@
 
       map.addSource("collection", { type: "geojson", data: strippedGeoJSON });
 
-
-      map.addLayer({
-        id: 'collection-heat',
-        type: 'heatmap',
-        source: 'collection',
-        paint: {
-          // increase weight as diameter breast height increases
-          'heatmap-weight': ["feature-state", "count"],
-          'heatmap-intensity': 0.005,
-          // assign color values be applied to points depending on their density
-          'heatmap-color': [
-            'interpolate',
-            ['linear'],
-            ['heatmap-density'],
-            0, "hsla(60, 89%, 55%, 0.0)",
-            0.2, "#fa9b3b",
-            0.4, "#de5f63",
-            0.6, "#9410a0",
-            0.8, "#110787"
-          ],
-          // increase radius as zoom increases
-          'heatmap-radius': 50,
-          // decrease opacity to transition into the circle layer
-          'heatmap-opacity': 0.2,
-        }
-      }, 'waterway-label');
+      map.addLayer(
+        {
+          id: "collection-heat",
+          type: "heatmap",
+          source: "collection",
+          paint: {
+            // increase weight as diameter breast height increases
+            "heatmap-weight": ["feature-state", "count"],
+            "heatmap-intensity": 0.005,
+            // assign color values be applied to points depending on their density
+            "heatmap-color": [
+              "interpolate",
+              ["linear"],
+              ["heatmap-density"],
+              0,
+              "hsla(60, 89%, 55%, 0.0)",
+              0.2,
+              "#fa9b3b",
+              0.4,
+              "#de5f63",
+              0.6,
+              "#9410a0",
+              0.8,
+              "#110787"
+            ],
+            // increase radius as zoom increases
+            "heatmap-radius": 50,
+            // decrease opacity to transition into the circle layer
+            "heatmap-opacity": 0.2
+          }
+        },
+        "waterway-label"
+      );
 
       map.addLayer(
         {
@@ -83,7 +89,10 @@
           type: "circle",
           source: "collection",
           paint: {
-            "circle-radius": ["sqrt",["coalesce", ["feature-state", "count"], 1]],
+            "circle-radius": [
+              "sqrt",
+              ["coalesce", ["feature-state", "count"], 1]
+            ],
             "circle-opacity": 0.5,
             "circle-color": [
               "interpolate",
@@ -118,7 +127,9 @@
         map.setFeatureState(
           { id: f.id, source: "collection" },
           {
-            count: f.properties.counts ? f.properties.counts[$currentTimestamp] : 0,
+            count: f.properties.counts
+              ? f.properties.counts[$currentTimestamp]
+              : 0
           }
         );
       });

@@ -10,7 +10,7 @@
     mapboxgl = (await import("mapbox-gl")).default;
 
     const token =
-      "pk.eyJ1IjoiYmVuamFtaW50ZCIsImEiOiJjaW83enIwNjYwMnB1dmlsejN6cDBzbm93In0.0ZOGwSLp8OjW6vCaEKYFng";
+      "pk.eyJ1IjoiYmVuamFtaW50ZCIsImEiOiJjbG4xaDI3ZnAwMG1yMmtwZm1tejhxeTdrIn0.2QEK7gosDnyJ2yaBMczX4w";
     mapboxgl.accessToken = token;
     map = new mapboxgl.Map({
       container,
