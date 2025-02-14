@@ -4,7 +4,7 @@
     featureCollection,
     selectedFeature,
     activeFilter,
-    filterFeatures
+    filterFeatures,
   } from "./stores.js";
 
   let mapboxgl;
@@ -21,7 +21,7 @@
     if (map && map.getSource("selected")) {
       if ($selectedFeature !== -1) {
         const f = $featureCollection.features.find(
-          f => f.properties.id === $selectedFeature
+          (f) => f.properties.id === $selectedFeature
         );
         if (f) {
           map.setFeatureState({ id: f.id, source: "events" }, { seen: true });
@@ -55,25 +55,25 @@
       container,
       style: "mapbox://styles/benjamintd/cjue3ir3w0dwy1fnzajaxngt5", // ben-maps
       center: [2.3387, 48.8597],
-      zoom: 11
+      zoom: 11,
     });
     window.map = map;
 
     map.on("load", async () => {
       // @todo write an api route that calls open data and caches the results (providing a featurecollection straight ahead)
-      fetch("https://datapourparis.benjamintd.now.sh/api/que-faire/events")
-        .then(res => res.json())
-        .then(fc => {
+      fetch("/api/que-faire/events")
+        .then((res) => res.json())
+        .then((fc) => {
           featureCollection.set(fc);
         });
 
       map.addSource("events", {
         type: "geojson",
-        data: { type: "FeatureCollection", features: [] }
+        data: { type: "FeatureCollection", features: [] },
       });
       map.addSource("selected", {
         type: "geojson",
-        data: { type: "FeatureCollection", features: [] }
+        data: { type: "FeatureCollection", features: [] },
       });
       map.addLayer(
         {
@@ -85,7 +85,7 @@
               "case",
               ["to-boolean", ["feature-state", "seen"]],
               "#c4d9f5",
-              "#357edd"
+              "#357edd",
             ],
             "circle-radius": [
               "interpolate",
@@ -94,7 +94,7 @@
               14,
               3,
               17,
-              10
+              10,
             ],
             "circle-stroke-width": [
               "interpolate",
@@ -103,10 +103,10 @@
               14,
               1,
               17,
-              3
+              3,
             ],
-            "circle-stroke-color": "#000000"
-          }
+            "circle-stroke-color": "#000000",
+          },
         },
         "waterway-label"
       );
@@ -116,17 +116,17 @@
         source: "selected",
         layout: {
           "icon-image": "pin",
-          "icon-anchor": "bottom"
-        }
+          "icon-anchor": "bottom",
+        },
       });
 
-      map.on("click", function(e) {
+      map.on("click", function (e) {
         var bbox = [
           [e.point.x - 2, e.point.y - 2],
-          [e.point.x + 2, e.point.y + 2]
+          [e.point.x + 2, e.point.y + 2],
         ];
         var features = map.queryRenderedFeatures(bbox, {
-          layers: ["events"]
+          layers: ["events"],
         });
 
         if (features.length) {
@@ -137,12 +137,12 @@
       });
 
       // Change the cursor to a pointer when the mouse is over the states layer.
-      map.on("mouseenter", "events", function() {
+      map.on("mouseenter", "events", function () {
         map.getCanvas().style.cursor = "pointer";
       });
 
       // Change it back to a pointer when it leaves.
-      map.on("mouseleave", "events", function() {
+      map.on("mouseleave", "events", function () {
         map.getCanvas().style.cursor = "";
       });
     });
@@ -155,4 +155,5 @@
 
 <div
   class="map z-1 h-100 flex-grow-1 absolute w-100 relative-l w-auto-l"
-  bind:this={container} />
+  bind:this={container}
+/>
